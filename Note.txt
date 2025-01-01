@@ -1,0 +1,8 @@
+what should be done for future update ?
+
+1. every time the user selects an image it will upload to the cloudinary , which results storage waste on the   cloudinary and also causes performance issue.
+
+2. try to keep the cloudinary api key safe
+
+3. 
+
