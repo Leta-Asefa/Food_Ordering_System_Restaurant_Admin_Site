@@ -1,20 +1,55 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useAuthUserContext } from '../../contexts/AuthUserContext';
 const Profile = () => {
     const [formData, setFormData] = useState({
         name: '',
         location: { type: 'Point', coordinates: [] },
         opened: false,
-        imageUrl: '',
+        image: '',
         cuisine: '',
         priceRange: '',
         address: '',
         contact: '',
+        _id: ''
     });
+
+    const { authUser } = useAuthUserContext()
 
     const CLOUDINARY_URL = 'https://api.cloudinary.com/v1_1/dpavrc7wd/image/upload';
     const CLOUDINARY_UPLOAD_PRESET = 'ml_default';
 
+    useEffect(() => {
+        async function getProfile() {
+
+            const response = await axios.get(`http://localhost:4000/restaurant/${authUser.contact}`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                withCredentials: true,
+            });
+
+            // Assuming the API response returns data in the correct format
+            const { _id, name, location, opened, image, cuisine, priceRange, address, contact } = response.data;
+            console.log(_id)
+            // Set the formData state with the fetched data
+            setFormData({
+                name: name || '',
+                location: location || { type: 'Point', coordinates: [] },
+                opened: opened || false,
+                image: image || '',  // keep the image if provided by the response
+                cuisine: cuisine || '',
+                priceRange: priceRange || '',
+                address: address || '',
+                contact: contact || '',
+                _id
+            });
+        }
+
+
+        getProfile()
+
+    }, [])
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -40,13 +75,12 @@ const Profile = () => {
 
         try {
             const response = await axios.post(CLOUDINARY_URL, formData);
-            const imageUrl = response.data.secure_url;
+            const image = response.data.secure_url;
             setFormData((prevFormData) => ({
                 ...prevFormData,
-                imageUrl,
+                image,
             }));
 
-            console.log(formData.imageUrl)
         } catch (error) {
             console.error('Error uploading image:', error);
         }
@@ -70,10 +104,30 @@ const Profile = () => {
         }
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(formData);
-        // Handle form submission, e.g., send data to the server
+console.log(formData)
+        const response = await axios.put(`http://localhost:4000/restaurant/update/${authUser.contact}`, formData, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            withCredentials: true,
+        });
+
+        const { _id, name, location, opened, image, cuisine, priceRange, address, contact } = response.data;
+
+        // Set the formData state with the fetched data
+        setFormData({
+            name: name || '',
+            location: location || { type: 'Point', coordinates: [] },
+            opened: opened || false,
+            image: image || '',  // keep the image if provided by the response
+            cuisine: cuisine || '',
+            priceRange: priceRange || '',
+            address: address || '',
+            contact: contact || '',
+
+        });
     };
 
     return (
@@ -83,7 +137,7 @@ const Profile = () => {
 
                 <div className=" w-24 mx-auto ">
 
-                    <img src={formData.imageUrl ? formData.imageUrl : 'logoplaceholder.svg'} alt="Restaurant" className="mt-2 w-20 mx-auto h-auto hover:opacity-50 rounded-lg" onClick={() => document.getElementById('image').click()} />
+                    <img src={formData.image ? formData.image : 'logoplaceholder.svg'} alt="Restaurant" className="mt-2 w-20 mx-auto h-auto hover:opacity-50 rounded-lg" onClick={() => document.getElementById('image').click()} />
 
                     <label className=" text-gray-700 text-xs mb-2" htmlFor="image">
                         upload profile pic
@@ -213,7 +267,7 @@ const Profile = () => {
                         type="submit"
                         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                     >
-                        Register
+                        Update
                     </button>
                 </div>
             </form>
