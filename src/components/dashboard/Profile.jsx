@@ -13,7 +13,7 @@ const Profile = () => {
         contact: '',
         _id: ''
     });
-
+    const [isUpdating, setIsUpdating] = useState(false)
     const { authUser } = useAuthUserContext()
 
     const CLOUDINARY_URL = 'https://api.cloudinary.com/v1_1/dpavrc7wd/image/upload';
@@ -31,8 +31,7 @@ const Profile = () => {
 
             // Assuming the API response returns data in the correct format
             const { _id, name, location, opened, image, cuisine, priceRange, address, contact } = response.data;
-            console.log(_id)
-            // Set the formData state with the fetched data
+          // Set the formData state with the fetched data
             setFormData({
                 name: name || '',
                 location: location || { type: 'Point', coordinates: [] },
@@ -106,29 +105,36 @@ const Profile = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-console.log(formData)
+        setIsUpdating(true)
         const response = await axios.put(`http://localhost:4000/restaurant/update/${authUser.contact}`, formData, {
             headers: {
                 'Content-Type': 'application/json',
             },
             withCredentials: true,
         });
+        
+        
+        if(response.statusText==='OK'){
 
-        const { _id, name, location, opened, image, cuisine, priceRange, address, contact } = response.data;
-
-        // Set the formData state with the fetched data
-        setFormData({
-            name: name || '',
-            location: location || { type: 'Point', coordinates: [] },
-            opened: opened || false,
-            image: image || '',  // keep the image if provided by the response
-            cuisine: cuisine || '',
-            priceRange: priceRange || '',
-            address: address || '',
-            contact: contact || '',
-
-        });
+            const { _id,name, location, opened, image, cuisine, priceRange, address, contact } = response.data;
+    
+            // Set the formData state with the fetched data
+            setFormData({
+                name: name || '',
+                location: location || { type: 'Point', coordinates: [] },
+                opened: opened || false,
+                image: image || '',  // keep the image if provided by the response
+                cuisine: cuisine || '',
+                priceRange: priceRange || '',
+                address: address || '',
+                contact: contact || '',
+                _id
+            });
+            
+            setIsUpdating(false)
+        }
     };
+    
 
     return (
         <div className="w-full mx-auto mt-4 py-0 px-24 border border-gray-200 rounded-lg shadow-lg">
@@ -265,9 +271,9 @@ console.log(formData)
                 <div className="flex items-center justify-between">
                     <button
                         type="submit"
-                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mb-10 rounded focus:outline-none focus:shadow-outline"
                     >
-                        Update
+                        {isUpdating ? 'Updating ...' : 'Update'}
                     </button>
                 </div>
             </form>
