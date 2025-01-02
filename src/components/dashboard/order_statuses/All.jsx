@@ -38,7 +38,6 @@ const All = () => {
                 withCredentials: true,
             });
 
-            console.log(response)
             setOrders(response.data)
             setFilteredOrders(response.data)
 

@@ -1,23 +1,46 @@
 import React, { useState } from 'react';
 import Modal from './DeliveryPersonModal';
+import axios from 'axios';
 
 const DisplayOrders = ({ order }) => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedDeliveryPerson, setSelectedDeliveryPerson] = useState(order.deliveryPerson);
-  
+    const [status, setStatus] = useState(order.status)
     const handleImageClick = () => {
-      setIsModalOpen(true);
+        setIsModalOpen(true);
     };
-  
-    const handleCloseModal = () => {
-      setIsModalOpen(false);
-    };
-  
-    const handleSelectDeliveryPerson = (person) => {
-      setSelectedDeliveryPerson(person.name);
 
-      setIsModalOpen(false);
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+    };
+
+    const handleSelectDeliveryPerson = (person) => {
+        setSelectedDeliveryPerson(person.name);
+
+        setIsModalOpen(false);
+    };
+
+    const handleStatusChange = async (e) => {
+        const newStatus = e.target.value;
+        setStatus(newStatus);
+console.log(newStatus)
+        try {
+            const response = await axios.put(`http://localhost:4000/order/${order._id}/status`, {
+                status: newStatus
+            }, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                withCredentials: true,
+            });
+            console.log(response)
+            if (response.data.message)
+                setStatus(newStatus)
+
+        } catch (error) {
+            console.error('Error updating status:', error);
+        }
     };
 
 
@@ -39,7 +62,7 @@ const DisplayOrders = ({ order }) => {
                     </div>
 
                     <div className=''>
-                        <div className='font-semibold'>Payment Status : <span className='text-green-500 '>{order.status}</span> </div>
+                        <div className='font-semibold'>Payment Status : <span className='text-green-500 '>{order.payment.status}</span> </div>
                         <div className='font-semibold'>Total : <span className='font-normal'>{order.totalAmount} ETB</span> </div>
                         <div className='font-semibold'>Payment Method : <span className='font-normal'>{order.paymentMethod}</span></div>
                     </div>
@@ -52,23 +75,26 @@ const DisplayOrders = ({ order }) => {
                 </div>
 
                 <div>
-                        
+
                     <div className='flex flex-row' >
                         <div>
-                            <div className='font-semibold'>   {/*order.deliveryPerson*/}  {selectedDeliveryPerson}</div>
-                            <div className=''>0987654321</div>
+                            <div className='font-semibold'>{order.deliveryPersonId.username}</div>
+                            <div className=''>{order.deliveryPersonId.phoneNumber}</div>
                             <div onClick={handleImageClick} className='bg-gray-800 text-white hover:bg-gray-600 rounded-lg px-1'>Change Delivery Person</div>
                         </div>
 
-                        <img src='/profilepic.jpeg' className='w-10 h-10 mx-auto rounded-lg' />
+                        <img src={order.deliveryPersonId.image} className='w-10 h-10 mx-auto rounded-lg' />
                     </div>
                     <div className=''>Order Date : {order.createdAt}</div>
                     <div className=''>
                         <label for="status">Status : </label>
-                        <select id="status" name="status">
-                            <option value="pending">Pending</option>
-                            <option value="delivered">Delivered</option>
-                            <option value="on-transit">On Transit</option>
+                        <select id="status" name="status" value={status} onChange={(e)=>handleStatusChange(e)}>
+                            <option value="Pending">Pending</option>
+                            <option value="Processing">Processing</option>
+                            <option value="Completed">Completed</option>
+                            <option value="Cancelled">Cancelled</option>
+                            <option value="OnTransit">On Transit</option>
+                            <option value="Delivered">Delivered</option>
                         </select>
                     </div>
                 </div>
@@ -79,7 +105,7 @@ const DisplayOrders = ({ order }) => {
 
 
             <Modal isOpen={isModalOpen} onClose={handleCloseModal} onSelectDeliveryPerson={handleSelectDeliveryPerson} />
-  
+
         </div>
     );
 };
