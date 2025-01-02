@@ -8,7 +8,7 @@ const Sidebar = () => {
 
     return (
         <div className='px-2 py-5 bg-gray-200 h-screen'>
-            <img src={authUser.licenseImage} className='w-16 h-16 object-cover mx-auto rounded-lg'/>
+            <img src={authUser.image} className='w-16 h-16 object-cover mx-auto rounded-lg'/>
             <h6 className='text-xs text-center'>Hi <b>{authUser.name}'s</b> admin</h6>
             <div className='flex flex-row justify-center items-center'>
                 <img src={authUser.isApproved?'verified.svg':'note.svg'}

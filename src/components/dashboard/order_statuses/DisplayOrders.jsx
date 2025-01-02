@@ -24,9 +24,9 @@ const DisplayOrders = ({ order }) => {
     return (
         <div className='p-2 rounded-lg bg-gray-200'>
             <div className='flex justify-between font-extrabold w-full text-sm border-b-2 border-gray-300 mb-1'>
-                <div className=''>Order ID : {order.id}</div>
-                <div>Customer Name : {order.customerName}</div>
-                <div>Customer Contact : {order.customerContact}</div>
+                <div className=''>Order ID : {order._id}</div>
+                <div>Customer Name : {order.userId.username}</div>
+                <div>Customer Contact : {order.userId.phoneNumber}</div>
             </div>
             <div className='flex flex-row justify-between'>
                 <div>
@@ -34,19 +34,19 @@ const DisplayOrders = ({ order }) => {
                     <div className='flex flex-row gap-3'>
                         <div className='font-semibold'>Order Items : </div>
                         {order.items.map((item) => {
-                            return <div> {item.name} ({item.quantity})  </div>
+                            return <div> {item.item.name} ({item.quantity})  </div>
                         })}
                     </div>
 
                     <div className=''>
-                        <div className='font-semibold'>Payment Status : <span className='text-green-500 '>{order.paymentStatus}</span> </div>
-                        <div className='font-semibold'>Total : <span className='font-normal'>{order.total} ETB</span> </div>
+                        <div className='font-semibold'>Payment Status : <span className='text-green-500 '>{order.status}</span> </div>
+                        <div className='font-semibold'>Total : <span className='font-normal'>{order.totalAmount} ETB</span> </div>
                         <div className='font-semibold'>Payment Method : <span className='font-normal'>{order.paymentMethod}</span></div>
                     </div>
 
                     <div className='flex flex-row gap-5'>
                         <div className='font-semibold'>Delivery Address</div>
-                        <div>{order.deliveryAddress}</div>
+                        <div>{order.shippingAddress.address}</div>
                     </div>
 
                 </div>
@@ -62,7 +62,7 @@ const DisplayOrders = ({ order }) => {
 
                         <img src='/profilepic.jpeg' className='w-10 h-10 mx-auto rounded-lg' />
                     </div>
-                    <div className=''>Order Date : 2021-03-03 12:09:23 PM</div>
+                    <div className=''>Order Date : {order.createdAt}</div>
                     <div className=''>
                         <label for="status">Status : </label>
                         <select id="status" name="status">
