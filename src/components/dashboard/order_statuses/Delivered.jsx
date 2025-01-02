@@ -1,38 +1,29 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import DisplayOrders from './DisplayOrders';
+import axios from 'axios';
+import { useAuthUserContext } from '../../../contexts/AuthUserContext';
 
 const Delivered = () => {
-    const orders = [
-        {
-            id: '123456789',
-            customerName: 'Abebe Kebede',
-            customerContact: '0987654321',
-            items: [
-                { name: 'Beef Burger', quantity: 2 },
-                { name: 'Coca Cola', quantity: 2 },
-                { name: 'Pizza Burger', quantity: 1 },
-            ],
-            paymentStatus: 'Paid',
-            total: 500,
-            paymentMethod: 'Mobile Banking',
-            deliveryAddress: 'Addis Ababa / Bole / Gurdshola / Efoyta / Street 128',
-            deliveryPerson: 'Bekele Dessie',
-        },
-        {
-            id: '987654321',
-            customerName: 'Hanna Alemu',
-            customerContact: '0976543210',
-            items: [
-                { name: 'Vegan Salad', quantity: 1 },
-                { name: 'Orange Juice', quantity: 1 },
-            ],
-            paymentStatus: 'Pending',
-            total: 150,
-            paymentMethod: 'Cash on Delivery',
-            deliveryAddress: 'Addis Ababa / CMC / Palm Street',
-            deliveryPerson: 'N/A',
+    const [orders, setOrders] = useState([])
+    const { authUser } = useAuthUserContext()
+
+    useEffect(() => {
+        async function get() {
+            const response = await axios.get(`http://localhost:4000/order/restaurant/${authUser._id}/status/Delivered`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                withCredentials: true,
+            });
+
+            setOrders(response.data)
+
         }
-    ];
+
+        get()
+
+
+    }, [])
 
 
 

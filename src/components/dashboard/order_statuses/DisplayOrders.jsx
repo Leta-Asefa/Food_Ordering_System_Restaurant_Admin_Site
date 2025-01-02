@@ -5,7 +5,7 @@ import axios from 'axios';
 const DisplayOrders = ({ order }) => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [selectedDeliveryPerson, setSelectedDeliveryPerson] = useState(order.deliveryPerson);
+    const [selectedDeliveryPerson, setSelectedDeliveryPerson] = useState(order.deliveryPersonId);
     const [status, setStatus] = useState(order.status)
     const handleImageClick = () => {
         setIsModalOpen(true);
@@ -15,8 +15,26 @@ const DisplayOrders = ({ order }) => {
         setIsModalOpen(false);
     };
 
-    const handleSelectDeliveryPerson = (person) => {
-        setSelectedDeliveryPerson(person.name);
+    const updateDeliveryPerson = async (person) => {
+
+        try {
+            const response = await axios.put(`http://localhost:4000/order/${order._id}/deliveryperson`, {
+                deliveryPersonId: person._id
+            }, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                withCredentials: true,
+            });
+
+            console.log(response)
+            
+            if (response.data.message)
+                setSelectedDeliveryPerson(person)
+
+        } catch (error) {
+            console.error('Error updating status:', error);
+        }
 
         setIsModalOpen(false);
     };
@@ -24,7 +42,7 @@ const DisplayOrders = ({ order }) => {
     const handleStatusChange = async (e) => {
         const newStatus = e.target.value;
         setStatus(newStatus);
-console.log(newStatus)
+
         try {
             const response = await axios.put(`http://localhost:4000/order/${order._id}/status`, {
                 status: newStatus
@@ -78,17 +96,17 @@ console.log(newStatus)
 
                     <div className='flex flex-row' >
                         <div>
-                            <div className='font-semibold'>{order.deliveryPersonId.username}</div>
-                            <div className=''>{order.deliveryPersonId.phoneNumber}</div>
+                            <div className='font-semibold'>{selectedDeliveryPerson.username}</div>
+                            <div className=''>{selectedDeliveryPerson.phoneNumber}</div>
                             <div onClick={handleImageClick} className='bg-gray-800 text-white hover:bg-gray-600 rounded-lg px-1'>Change Delivery Person</div>
                         </div>
 
-                        <img src={order.deliveryPersonId.image} className='w-10 h-10 mx-auto rounded-lg' />
+                        <img src={selectedDeliveryPerson.image} className='w-10 h-10 mx-auto rounded-lg' />
                     </div>
                     <div className=''>Order Date : {order.createdAt}</div>
                     <div className=''>
                         <label for="status">Status : </label>
-                        <select id="status" name="status" value={status} onChange={(e)=>handleStatusChange(e)}>
+                        <select id="status" name="status" value={status} onChange={(e) => handleStatusChange(e)}>
                             <option value="Pending">Pending</option>
                             <option value="Processing">Processing</option>
                             <option value="Completed">Completed</option>
@@ -104,7 +122,7 @@ console.log(newStatus)
             </div>
 
 
-            <Modal isOpen={isModalOpen} onClose={handleCloseModal} onSelectDeliveryPerson={handleSelectDeliveryPerson} />
+            <Modal isOpen={isModalOpen} onClose={handleCloseModal} updateDeliveryPerson={updateDeliveryPerson} />
 
         </div>
     );

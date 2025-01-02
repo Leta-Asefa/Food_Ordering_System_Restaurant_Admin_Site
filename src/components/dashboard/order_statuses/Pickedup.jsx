@@ -3,14 +3,14 @@ import DisplayOrders from './DisplayOrders';
 import axios from 'axios';
 import { useAuthUserContext } from '../../../contexts/AuthUserContext';
 
-const Paid = () => {
+const Pickedup = () => {
    
     const [orders, setOrders] = useState([])
     const { authUser } = useAuthUserContext()
 
     useEffect(() => {
         async function get() {
-            const response = await axios.get(`http://localhost:4000/order/restaurant/${authUser._id}/status/Paid`, {
+            const response = await axios.get(`http://localhost:4000/order/restaurant/${authUser._id}/status/Picked Up`, {
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -43,4 +43,4 @@ const Paid = () => {
     );
 };
 
-export default Paid;
+export default Pickedup;

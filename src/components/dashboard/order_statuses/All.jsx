@@ -14,16 +14,15 @@ const All = () => {
         const filtered = orders.filter(order => {
             const searchTerm = searchQuery.toLowerCase();
             return (
-                order.id.toLowerCase().includes(searchTerm) ||
-                order.customerName.toLowerCase().includes(searchTerm) ||
-                order.customerContact.toLowerCase().includes(searchTerm) ||
+                order._id.toLowerCase().includes(searchTerm) ||
+                order.userId.username.toLowerCase().includes(searchTerm) ||
+                order.userId.phoneNumber.toLowerCase().includes(searchTerm) ||
                 order.items.some(item =>
-                    item.name.toLowerCase().includes(searchTerm)
+                    item.item.name.toLowerCase().includes(searchTerm)
                 ) ||
-                order.paymentStatus.toLowerCase().includes(searchTerm) ||
+                order.payment.status.toLowerCase().includes(searchTerm) ||
                 order.paymentMethod.toLowerCase().includes(searchTerm) ||
-                order.deliveryAddress.toLowerCase().includes(searchTerm) ||
-                order.deliveryPerson.toLowerCase().includes(searchTerm)
+                order.shippingAddress.address.toLowerCase().includes(searchTerm)
             );
         });
         setFilteredOrders(filtered);
@@ -46,7 +45,7 @@ const All = () => {
         get()
         
 
-    }, [orders])
+    }, [])
 
 
 
@@ -70,7 +69,7 @@ const All = () => {
             {/* Display Orders */}
             <div className='bg-gray-50 px-5 py-1 rounded-lg overflow-hidden text-xs space-y-2'>
                 {filteredOrders.map(order => (
-                    <DisplayOrders key={order.id} order={order} />
+                    <DisplayOrders key={order._id} order={order} />
                 ))}
             </div>
         </div>

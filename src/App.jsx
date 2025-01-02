@@ -28,6 +28,8 @@ import Refund from './components/dashboard/payment/Refund';
 import Subscription from './components/dashboard/payment/Subscription';
 import Payment from './components/dashboard/Payment';
 import AddDeliveryPerson from './components/dashboard/AddDeliveryPerson';
+import ReadyForPickup from './components/dashboard/order_statuses/ReadyForPickup';
+import Cancelled from './components/dashboard/order_statuses/Cancelled';
 
 function App() {
 
@@ -61,6 +63,10 @@ function App() {
             <Route path="/orders/paid" element={<Paid />} />
             <Route path="/orders/delivered" element={<Delivered />} />
             <Route path="/orders/ontransit" element={<OnTransit />} />
+            <Route path="/orders/readyforpickup" element={<ReadyForPickup />} />
+            <Route path="/orders/pickedup" element={<OnTransit />} />
+            <Route path="/orders/ontransit" element={<OnTransit />} />
+            <Route path="/orders/cancelled" element={<Cancelled />} />
           </Route>
 
 
