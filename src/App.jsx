@@ -30,6 +30,7 @@ import Payment from './components/dashboard/Payment';
 import AddDeliveryPerson from './components/dashboard/AddDeliveryPerson';
 import ReadyForPickup from './components/dashboard/order_statuses/ReadyForPickup';
 import Cancelled from './components/dashboard/order_statuses/Cancelled';
+import Catering from './components/dashboard/menu_navigation/Catering';
 
 function App() {
 
@@ -74,6 +75,7 @@ function App() {
             <Route path="/menu/additem" element={<AddItem />} />
             <Route path="/menu/food" element={<Food />} />
             <Route path="/menu/drink" element={<Drink />} />
+            <Route path="/menu/catering" element={<Catering />} />
           </Route>
 
           <Route element={<PaymentLayout />}>

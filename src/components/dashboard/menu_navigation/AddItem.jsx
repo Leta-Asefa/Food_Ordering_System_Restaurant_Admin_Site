@@ -174,7 +174,7 @@ const AddItem = () => {
                             name="calories"
                             value={formData.calories}
                             onChange={handleChange}
-                            required
+                            required={formData.type !== 'Catering'}
                             className="w-full mt-1 p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                         />
                     </div>
@@ -194,7 +194,7 @@ const AddItem = () => {
                                 name="protein"
                                 value={formData.nutritionalInformation.protein}
                                 onChange={handleChange}
-                                required
+                                required={formData.type !== 'Catering'}
                                 className="w-full mt-1 p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                             />
                         </div>
@@ -206,7 +206,7 @@ const AddItem = () => {
                                 name="totalCarbohydrates"
                                 value={formData.nutritionalInformation.totalCarbohydrates}
                                 onChange={handleChange}
-                                required
+                                required={formData.type !== 'Catering'}
                                 className="w-full mt-1 p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                             />
                         </div>
@@ -218,7 +218,7 @@ const AddItem = () => {
                                 name="totalFat"
                                 value={formData.nutritionalInformation.totalFat}
                                 onChange={handleChange}
-                                required
+                                required={formData.type !== 'Catering'}
                                 className="w-full mt-1 p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                             />
                         </div>
@@ -233,7 +233,7 @@ const AddItem = () => {
                             name="preparationTime"
                             value={formData.preparationTime}
                             onChange={handleChange}
-                            required
+                            required={formData.type !== 'Catering'}
                             className="w-full mt-1 p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                         />
                     </div>
@@ -246,7 +246,7 @@ const AddItem = () => {
                             name="allergensInformation"
                             value={formData.allergensInformation}
                             onChange={handleChange}
-                            required
+                            required={formData.type !== 'Catering'}
                             className="w-full mt-1 p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                         />
                     </div>
@@ -261,7 +261,7 @@ const AddItem = () => {
                         >
                             <option value="Food">Food</option>
                             <option value="Drink">Drink</option>
-                            <option value="Catering Package">Catering Package</option>
+                            <option value="Catering">Catering Package</option>
                         </select>
                     </div>
 
@@ -283,7 +283,7 @@ const AddItem = () => {
                             type="submit"
                             className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                         >
-                            Submit Item
+                            {isUpdating ? 'Submitting...' : 'Submit Item'}
                         </button>
                     </div>
 
