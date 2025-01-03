@@ -96,7 +96,7 @@ const ItemModal = ({ isOpen, onClose, onUpdate, selectedFood }) => {
 
           <div className=" w-28 mx-auto ">
 
-            <img src={formData.image ? formData.image : 'logoplaceholder.svg'} alt="Restaurant" className="mt-2 w-20 mx-auto h-auto hover:opacity-50 rounded-lg" onClick={() => document.getElementById('image').click()} />
+            <img src={formData.image ? formData.image : 'logoplaceholder.svg'} alt="Restaurant" className="mt-2 w-20 mx-auto h-auto max-h-32 hover:opacity-50 rounded-lg" onClick={() => document.getElementById('image').click()} />
 
             <label className=" text-gray-700 text-xs mb-2 " htmlFor="image">
               Update Menu Image
