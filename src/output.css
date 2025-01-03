@@ -797,12 +797,20 @@ video {
   width: 24rem;
 }
 
+.w-auto {
+  width: auto;
+}
+
 .w-full {
   width: 100%;
 }
 
-.w-auto {
-  width: auto;
+.w-44 {
+  width: 11rem;
+}
+
+.w-28 {
+  width: 7rem;
 }
 
 .min-w-full {
@@ -833,6 +841,10 @@ video {
 
 .grid-cols-3 {
   grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.grid-cols-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .flex-row {
@@ -1299,6 +1311,11 @@ video {
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
 
+.blur {
+  --tw-blur: blur(8px);
+  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
+}
+
 .filter {
   filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
 }
@@ -1311,6 +1328,21 @@ video {
 
 .duration-300 {
   transition-duration: 300ms;
+}
+
+.no-spinner {
+  -webkit-appearance: none;
+  /* Remove spinners in WebKit browsers */
+  -moz-appearance: textfield;
+       appearance: textfield;
+  /* Standard appearance for cross-browser compatibility */
+}
+
+.no-spinner::-webkit-inner-spin-button,
+  .no-spinner::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+  /* Removes the margin for better styling */
 }
 
 .hover\:bg-blue-600:hover {
@@ -1430,3 +1462,4 @@ video {
     grid-template-columns: repeat(5, minmax(0, 1fr));
   }
 }
+  

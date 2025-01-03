@@ -1,4 +1,10 @@
+import axios from 'axios';
 import React, { useState, useEffect } from 'react';
+
+const CLOUDINARY_URL = 'https://api.cloudinary.com/v1_1/dpavrc7wd/image/upload';
+const CLOUDINARY_UPLOAD_PRESET = 'ml_default';
+
+
 
 const ItemModal = ({ isOpen, onClose, onUpdate, selectedFood }) => {
   const [formData, setFormData] = useState({});
@@ -28,10 +34,47 @@ const ItemModal = ({ isOpen, onClose, onUpdate, selectedFood }) => {
     });
   };
 
-  const handleUpdate = () => {
-    onUpdate(formData);
-    onClose();
+  const handleUpdate = async () => {
+
+    try {
+      const response = await axios.put(`http://localhost:4000/item/${formData._id}`, formData, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        withCredentials: true,
+      });
+
+      console.log(response)
+
+      if (response.data.message) {
+        onUpdate(formData);
+        onClose();
+      }
+
+    } catch (error) {
+      console.error('Error updating status:', error);
+    }
+
   };
+
+  const handleImageChange = async (e) => {
+    const file = e.target.files[0];
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+
+    try {
+        const response = await axios.post(CLOUDINARY_URL, formData);
+        const image = response.data.secure_url;
+        setFormData((prevFormData) => ({
+            ...prevFormData,
+            image,
+        }));
+
+    } catch (error) {
+        console.error('Error uploading image:', error);
+    }
+};
 
   if (!isOpen) return null;
   if (!selectedFood) return null;
@@ -50,7 +93,25 @@ const ItemModal = ({ isOpen, onClose, onUpdate, selectedFood }) => {
 
         <div className="p-6">
           <h2 className="text-2xl font-bold mb-4">Edit Food Details</h2>
-          <div className="grid grid-cols-1 gap-4">
+
+          <div className=" w-28 mx-auto ">
+
+            <img src={formData.image ? formData.image : 'logoplaceholder.svg'} alt="Restaurant" className="mt-2 w-20 mx-auto h-auto hover:opacity-50 rounded-lg" onClick={() => document.getElementById('image').click()} />
+
+            <label className=" text-gray-700 text-xs mb-2 " htmlFor="image">
+              Update Menu Image
+            </label>
+            <input
+              type="file"
+              name="image"
+              id="image"
+              accept="image/*"
+              onChange={handleImageChange}
+              className="invisible"
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700">Name</label>
               <input
@@ -68,7 +129,8 @@ const ItemModal = ({ isOpen, onClose, onUpdate, selectedFood }) => {
                 name="price"
                 value={formData.price || ''}
                 onChange={handleChange}
-                className="w-full mt-1 p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                className="w-full mt-1 p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 no-spinner"
+                onWheel={(e) => e.target.blur()}
               />
             </div>
             <div>
@@ -87,7 +149,8 @@ const ItemModal = ({ isOpen, onClose, onUpdate, selectedFood }) => {
                 name="calories"
                 value={formData.calories || ''}
                 onChange={handleChange}
-                className="w-full mt-1 p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                className="w-full mt-1 p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 no-spinner"
+                onWheel={(e) => e.target.blur()}
               />
             </div>
             <div>
@@ -109,8 +172,9 @@ const ItemModal = ({ isOpen, onClose, onUpdate, selectedFood }) => {
                     name="protein"
                     value={formData.nutritionalInformation?.protein || ''}
                     onChange={(e) => handleNestedChange(e, 'nutritionalInformation')}
-                    className="w-full mt-1 p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full mt-1 p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 no-spinner"
                     placeholder="Protein"
+                    onWheel={(e) => e.target.blur()}
                   />
                 </div>
                 <div>
@@ -119,8 +183,9 @@ const ItemModal = ({ isOpen, onClose, onUpdate, selectedFood }) => {
                     name="totalCarbohydrates"
                     value={formData.nutritionalInformation?.totalCarbohydrates || ''}
                     onChange={(e) => handleNestedChange(e, 'nutritionalInformation')}
-                    className="w-full mt-1 p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full mt-1 p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 no-spinner"
                     placeholder="Carbohydrates"
+                    onWheel={(e) => e.target.blur()}
                   />
                 </div>
                 <div>
@@ -129,8 +194,9 @@ const ItemModal = ({ isOpen, onClose, onUpdate, selectedFood }) => {
                     name="totalFat"
                     value={formData.nutritionalInformation?.totalFat || ''}
                     onChange={(e) => handleNestedChange(e, 'nutritionalInformation')}
-                    className="w-full mt-1 p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full mt-1 p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 no-spinner"
                     placeholder="Fat"
+                    onWheel={(e) => e.target.blur()}
                   />
                 </div>
               </div>

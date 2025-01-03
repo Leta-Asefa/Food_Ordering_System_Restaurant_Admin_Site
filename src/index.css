@@ -1,3 +1,15 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.no-spinner {
+    -webkit-appearance: none; /* Remove spinners in WebKit browsers */
+    appearance: textfield;    /* Standard appearance for cross-browser compatibility */
+  }
+  
+  .no-spinner::-webkit-inner-spin-button,
+  .no-spinner::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0; /* Removes the margin for better styling */
+  }
+  
