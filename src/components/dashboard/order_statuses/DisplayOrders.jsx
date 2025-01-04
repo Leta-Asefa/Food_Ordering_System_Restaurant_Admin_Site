@@ -75,7 +75,7 @@ const DisplayOrders = ({ order }) => {
                     <div className='flex flex-row gap-3'>
                         <div className='font-semibold'>Order Items : </div>
                         {order.items.map((item) => {
-                            return <div> {item.item.name} ({item.quantity})  </div>
+                            return <div> {item.item.name} ({item.quantity}X)  </div>
                         })}
                     </div>
 
@@ -109,10 +109,11 @@ const DisplayOrders = ({ order }) => {
                         <select id="status" name="status" value={status} onChange={(e) => handleStatusChange(e)}>
                             <option value="Pending">Pending</option>
                             <option value="Processing">Processing</option>
-                            <option value="Completed">Completed</option>
                             <option value="Cancelled">Cancelled</option>
                             <option value="OnTransit">On Transit</option>
                             <option value="Delivered">Delivered</option>
+                            <option value="Ready For Pickup">Ready For Pickup</option>
+                            <option value="Picked Up">Pickedup</option>
                         </select>
                     </div>
                 </div>

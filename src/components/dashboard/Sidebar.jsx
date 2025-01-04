@@ -32,7 +32,7 @@ const Sidebar = () => {
                 <img src='promotion.svg' className='w-8 h-8' />
                 <span>Promotions</span>
             </NavLink>
-            <NavLink to="/reports" className="flex items-center p-2 space-x-3 hover:bg-gray-200 rounded">
+            <NavLink to="/report" className="flex items-center p-2 space-x-3 hover:bg-gray-200 rounded">
                 <img src='report.svg' className='w-8 h-8' />
                 <span>Reports</span>
             </NavLink>

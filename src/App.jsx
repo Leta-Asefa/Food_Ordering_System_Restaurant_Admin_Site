@@ -23,7 +23,6 @@ import Food from './components/dashboard/menu_navigation/Food';
 import Drink from './components/dashboard/menu_navigation/Drink';
 import PaymentLayout from './layouts/Payment';
 import History from './components/dashboard/payment/History';
-import Report from './components/dashboard/payment/Report';
 import Refund from './components/dashboard/payment/Refund';
 import Subscription from './components/dashboard/payment/Subscription';
 import Payment from './components/dashboard/Payment';
@@ -31,6 +30,7 @@ import AddDeliveryPerson from './components/dashboard/AddDeliveryPerson';
 import ReadyForPickup from './components/dashboard/order_statuses/ReadyForPickup';
 import Cancelled from './components/dashboard/order_statuses/Cancelled';
 import Catering from './components/dashboard/menu_navigation/Catering';
+import Report from './components/dashboard/Report';
 
 function App() {
 
@@ -54,6 +54,7 @@ function App() {
           <Route path="/orders" element={<Order />} />
           <Route path="/menu" element={<Menu />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/report" element={<Report/>} />
           <Route path="/payment" element={<Payment />} />
           <Route path="/adddeliveryperson" element={<AddDeliveryPerson />} />
 
