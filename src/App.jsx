@@ -31,6 +31,11 @@ import ReadyForPickup from './components/dashboard/order_statuses/ReadyForPickup
 import Cancelled from './components/dashboard/order_statuses/Cancelled';
 import Catering from './components/dashboard/menu_navigation/Catering';
 import Report from './components/dashboard/Report';
+import Promotion from './components/dashboard/Promotion';
+import PromotionLayout from './layouts/Promotion';
+import CreateNew from './components/dashboard/promotion/CreateNew';
+import PromotionList from './components/dashboard/promotion/PromotionList';
+import UnderApplication from './components/dashboard/promotion/UnderApplication';
 
 function App() {
 
@@ -56,6 +61,7 @@ function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/report" element={<Report/>} />
           <Route path="/payment" element={<Payment />} />
+          <Route path="/promotion" element={<Promotion />} />
           <Route path="/adddeliveryperson" element={<AddDeliveryPerson />} />
 
 
@@ -84,6 +90,12 @@ function App() {
             <Route path="/payment/report" element={<Report />} />
             <Route path="/payment/refund" element={<Refund />} />
             <Route path="/payment/subscription" element={<Subscription />} />
+          </Route>
+
+          <Route element={<PromotionLayout />}>
+            <Route path="/promotion/create" element={<CreateNew />} />
+            <Route path="/promotion/list" element={<PromotionList />} />
+            <Route path="/promotion/underapplication" element={<UnderApplication />} />
           </Route>
 
 

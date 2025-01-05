@@ -28,7 +28,7 @@ const Sidebar = () => {
                 <img src='menu.svg' className='w-8 h-8' />
                 <span>Menu</span>
             </NavLink>
-            <NavLink to="/promotions" className="flex items-center p-2 space-x-3 hover:bg-gray-200 rounded">
+            <NavLink to="/promotion" className="flex items-center p-2 space-x-3 hover:bg-gray-200 rounded">
                 <img src='promotion.svg' className='w-8 h-8' />
                 <span>Promotions</span>
             </NavLink>

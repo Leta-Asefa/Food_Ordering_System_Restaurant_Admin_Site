@@ -80,7 +80,7 @@ const History = ({ }) => {
             type="number"
             placeholder="Min Amount"
             className="border p-2"
-            value={amountRange.min}
+            value={amountRange.min===0?'':amountRange.min}
             onChange={(e) =>
               setAmountRange({ ...amountRange, min: Number(e.target.value) })
             }
@@ -89,7 +89,7 @@ const History = ({ }) => {
             type="number"
             placeholder="Max Amount"
             className="border p-2"
-            value={amountRange.max}
+            value={amountRange.max===1000?'':amountRange.max}
             onChange={(e) =>
               setAmountRange({ ...amountRange, max: Number(e.target.value) })
             }
