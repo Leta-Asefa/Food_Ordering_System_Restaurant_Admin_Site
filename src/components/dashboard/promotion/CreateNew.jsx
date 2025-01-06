@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useAuthUserContext } from '../../../contexts/AuthUserContext';
 
@@ -18,7 +18,21 @@ const CreateNew = () => {
     const [imageFile, setImageFile] = useState(null);
     const [loading, setLoading] = useState(false);
     const { authUser } = useAuthUserContext()
+    const [price,setPrice]=useState({})
 
+    useEffect(() => {
+        const fetch = async () => {
+            try {
+                const response = await axios.get(`http://localhost:4000/promotion/tier/pricelist`);
+                if (response.data.price) 
+                    setPrice(response.data.price)
+            } catch (error) {
+                console.error('Error fetching promotions tier price list:', error);
+            } 
+        };
+
+        fetch();
+    }, []);
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -86,11 +100,11 @@ const CreateNew = () => {
                 <div className="mb-4">
                     <label className="block font-medium">Promotion Tier</label>
                     <select name="tier" value={formData.tier} onChange={handleChange} className="w-full px-3 py-2 border rounded-lg" required>
-                        <option value="Platinum">Platinum (Highest Priority)</option>
-                        <option value="Gold">Gold</option>
-                        <option value="Silver">Silver</option>
-                        <option value="Bronze">Bronze</option>
-                        <option value="Basic">Basic (Lowest Priority)</option>
+                        <option value="Platinum" className='text-violet-600 font-semibold'>Platinum (Highest Priority) ( {price.Platinum} ETB )</option>
+                        <option value="Gold" className='text-orange-600 font-semibold'>Gold ( {price.Gold} ETB  ) </option>
+                        <option value="Silver" className='text-gray-500 font-semibold'>Silver ( {price.Silver} ETB  )</option>
+                        <option value="Bronze" className='text-red-600 font-semibold'>Bronze ( {price.Bronze} ETB  )</option>
+                        <option value="Basic" className='text-gray-800 font-semibold'>Basic (Lowest Priority) ( {price.Basic} ETB  ) </option>
                     </select>
                 </div>
 

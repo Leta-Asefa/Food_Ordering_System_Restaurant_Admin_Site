@@ -6,6 +6,7 @@ const PromotionList = () => {
     const tiers = ['Platinum', 'Gold', 'Silver', 'Bronze', 'Basic'];
     const [loading, setLoading] = useState(true);
 
+    
     useEffect(() => {
         const fetchPromotions = async () => {
             try {
