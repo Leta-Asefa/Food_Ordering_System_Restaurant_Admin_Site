@@ -13,17 +13,17 @@ const UnderApplication = ({ restaurantId }) => {
     const { authUser } = useAuthUserContext();
     const [editingPromo, setEditingPromo] = useState(null);
     const [editValues, setEditValues] = useState({});
-    const [price,setPrice]=useState({})
+    const [price, setPrice] = useState({})
 
     useEffect(() => {
         const fetch = async () => {
             try {
                 const response = await axios.get(`http://localhost:4000/promotion/tier/pricelist`);
-                if (response.data.price) 
+                if (response.data.price)
                     setPrice(response.data.price)
             } catch (error) {
                 console.error('Error fetching promotions tier price list:', error);
-            } 
+            }
         };
 
         fetch();
@@ -44,9 +44,9 @@ const UnderApplication = ({ restaurantId }) => {
         fetchPromotions();
     }, [restaurantId]);
 
-    const handlePay = async (promotionId,tier) => {
-        const amount=Number(price[tier])
-        const paymentInfo = { phoneNumber: authUser.contact, amount: amount, firstName: authUser.name };
+    const handlePay = async (promotionId, tier) => {
+        const amount = Number(price[tier])
+        const paymentInfo = { phoneNumber: authUser.contact, amount: amount, firstName: authUser.name, promotionId };
 
         try {
             const response = await axios.post('http://localhost:4000/payment/test', paymentInfo, {
@@ -68,8 +68,11 @@ const UnderApplication = ({ restaurantId }) => {
 
     const handleActivate = async (promotionId) => {
         try {
-            await axios.post(`http://localhost:4000/promotion/activate/${promotionId}`);
-            alert('Promotion activated!');
+            const response = await axios.post(`http://localhost:4000/promotion/activate/${promotionId}`);
+            if (response.data.message)
+                alert(response.data.message);
+            else
+                alert(response.data.error);
         } catch (error) {
             console.error('Activation failed:', error);
         }
@@ -92,16 +95,16 @@ const UnderApplication = ({ restaurantId }) => {
     const handleUpdate = async (promotionId) => {
         try {
             let imageUrl = editValues.image; // Keep existing image URL if no new image is uploaded
-    
+
             if (editValues.image instanceof File) {
                 const formData = new FormData();
                 formData.append('file', editValues.image);
                 formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET); // Replace with your Cloudinary upload preset
-                
+
                 const cloudinaryResponse = await axios.post(CLOUDINARY_URL, formData);
                 imageUrl = cloudinaryResponse.data.secure_url;
             }
-            
+
             const updatedPromo = {
                 title: editValues.title,
                 description: editValues.description,
@@ -111,29 +114,29 @@ const UnderApplication = ({ restaurantId }) => {
             };
 
             console.log(updatedPromo)
-    
-            const response=await axios.put(`http://localhost:4000/promotion/${promotionId}`, updatedPromo, {
+
+            const response = await axios.put(`http://localhost:4000/promotion/${promotionId}`, updatedPromo, {
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 withCredentials: true,
             });
 
-            if(response.data.promotion){
+            if (response.data.promotion) {
                 setPromotions((prevPromotions) =>
                     prevPromotions.map((promo) =>
                         promo._id === promotionId ? { ...promo, ...updatedPromo } : promo
                     )
                 );
             }
-    
+
             alert('Promotion updated successfully!');
             setEditingPromo(null);
         } catch (error) {
             console.error('Update failed:', error);
         }
     };
-    
+
 
     return (
         <div className="p-4">
@@ -189,7 +192,7 @@ const UnderApplication = ({ restaurantId }) => {
                                             promo.tier
                                         )}
                                     </td>
-                                    <td className="border p-2 text-center">
+                                    <td className="border p-2 text-center flex flex-row justify-center items-center gap-2">
                                         {editingPromo === promo._id ? (
                                             <>
                                                 <input type="file" name="image" onChange={handleFileChange} className="border p-1" />
@@ -197,8 +200,18 @@ const UnderApplication = ({ restaurantId }) => {
                                             </>
                                         ) : (
                                             <>
-             <button className="bg-blue-500 text-white px-3 py-1 rounded mr-2" onClick={() => handlePay(promo._id,promo.tier)}>Pay</button>
-                                                <button className="bg-green-500 text-white px-3 py-1 rounded mr-2" onClick={() => handleActivate(promo._id)}>Activate</button>
+                                                <button
+                                                    disabled={promo.status === 'active' ? true : false}
+                                                    className={`${promo.status === 'active' ? "bg-gray-300" : 'bg-blue-500 hover:bg-blue-700'} text-white px-3 py-1 rounded mr-2`}
+                                                    onClick={() => handlePay(promo._id, promo.tier)}>
+                                                     {promo.status === 'active' ? "Paid" : "Pay"}
+                                                </button>
+                                                <button
+                                                    disabled={promo.status === 'active' ? true : false}
+                                                    className={`${promo.status === 'active' ? "bg-gray-300" : 'bg-green-500 hover:bg-green-700'}  text-white px-3 py-1 rounded mr-2`}
+                                                    onClick={() => handleActivate(promo._id)}>
+                                                    {promo.status === 'active' ? "Activated" : "Activate"}
+                                                    </button>
                                                 <button className="bg-yellow-500 text-white px-3 py-1 rounded" onClick={() => handleEdit(promo)}>Edit</button>
                                             </>
                                         )}
