@@ -66,17 +66,7 @@ const UnderApplication = ({ restaurantId }) => {
         }
     };
 
-    const handleActivate = async (promotionId) => {
-        try {
-            const response = await axios.post(`http://localhost:4000/promotion/activate/${promotionId}`);
-            if (response.data.message)
-                alert(response.data.message);
-            else
-                alert(response.data.error);
-        } catch (error) {
-            console.error('Activation failed:', error);
-        }
-    };
+
 
     const handleEdit = (promo) => {
         setEditingPromo(promo._id);
@@ -204,14 +194,9 @@ const UnderApplication = ({ restaurantId }) => {
                                                     disabled={promo.status === 'active' ? true : false}
                                                     className={`${promo.status === 'active' ? "bg-gray-300" : 'bg-blue-500 hover:bg-blue-700'} text-white px-3 py-1 rounded mr-2`}
                                                     onClick={() => handlePay(promo._id, promo.tier)}>
-                                                     {promo.status === 'active' ? "Paid" : "Pay"}
+                                                    {promo.status === 'active' ? "Paid" : "Pay"}
                                                 </button>
-                                                <button
-                                                    disabled={promo.status === 'active' ? true : false}
-                                                    className={`${promo.status === 'active' ? "bg-gray-300" : 'bg-green-500 hover:bg-green-700'}  text-white px-3 py-1 rounded mr-2`}
-                                                    onClick={() => handleActivate(promo._id)}>
-                                                    {promo.status === 'active' ? "Activated" : "Activate"}
-                                                    </button>
+
                                                 <button className="bg-yellow-500 text-white px-3 py-1 rounded" onClick={() => handleEdit(promo)}>Edit</button>
                                             </>
                                         )}
