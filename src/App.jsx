@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './components/auths/Login';
 import Signup from './components/auths/Signup';
 import Logout from './components/auths/Logout';
-import Home from './components/auths/RegisterRestaurants';
 import HomeLayout from './layouts/Home';
 import RegisterRestaurants from './components/auths/RegisterRestaurants';
 import Dashboard from './components/dashboard/Dashboard';
@@ -27,7 +26,6 @@ import Refund from './components/dashboard/payment/Refund';
 import Subscription from './components/dashboard/payment/Subscription';
 import Payment from './components/dashboard/Payment';
 import AddDeliveryPerson from './components/dashboard/AddDeliveryPerson';
-import ReadyForPickup from './components/dashboard/order_statuses/ReadyForPickup';
 import Cancelled from './components/dashboard/order_statuses/Cancelled';
 import Catering from './components/dashboard/menu_navigation/Catering';
 import Report from './components/dashboard/Report';
@@ -70,9 +68,6 @@ function App() {
             <Route path="/orders/pending" element={<Pending />} />
             <Route path="/orders/paid" element={<Paid />} />
             <Route path="/orders/delivered" element={<Delivered />} />
-            <Route path="/orders/ontransit" element={<OnTransit />} />
-            <Route path="/orders/readyforpickup" element={<ReadyForPickup />} />
-            <Route path="/orders/pickedup" element={<OnTransit />} />
             <Route path="/orders/ontransit" element={<OnTransit />} />
             <Route path="/orders/cancelled" element={<Cancelled />} />
           </Route>

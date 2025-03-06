@@ -18,19 +18,18 @@ const DisplayOrders = ({ order }) => {
     const updateDeliveryPerson = async (person) => {
 
         try {
-            const response = await axios.put(`http://localhost:4000/order/${order._id}/deliveryperson`, {
-                deliveryPersonId: person._id
-            }, {
+            const response = await axios.get(`http://localhost:4000/order/${order._id}/deliveryoffer/${person._id}`, {
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 withCredentials: true,
             });
 
-            console.log(response)
-            
-            if (response.data.message)
+
+            if (response.data.message) {
                 setSelectedDeliveryPerson(person)
+                alert(`Delivery offer is sent to ${person.username}. if he/she declines or not answer in 45 seconds , we will notify you to change another person !`)
+            }
 
         } catch (error) {
             console.error('Error updating status:', error);
@@ -66,8 +65,8 @@ const DisplayOrders = ({ order }) => {
         <div className='p-2 rounded-lg bg-gray-200'>
             <div className='flex justify-between font-extrabold w-full text-sm border-b-2 border-gray-300 mb-1'>
                 <div className=''>Order ID : {order._id}</div>
-                <div>Customer Name : {order.userId.username}</div>
-                <div>Customer Contact : {order.userId.phoneNumber}</div>
+                {/* <div>Customer Name : {order.userId.username}</div>
+                <div>Customer Contact : {order.userId.phoneNumber}</div> */}
             </div>
             <div className='flex flex-row justify-between'>
                 <div>
@@ -80,9 +79,9 @@ const DisplayOrders = ({ order }) => {
                     </div>
 
                     <div className=''>
-                        <div className='font-semibold'>Payment Status : <span className='text-green-500 '>{order.payment.status}</span> </div>
+                        {/* <div className='font-semibold'>Payment Status : <span className='text-green-500 '>{order.payment.status}</span> </div> */}
                         <div className='font-semibold'>Total : <span className='font-normal'>{order.totalAmount} ETB</span> </div>
-                        <div className='font-semibold'>Payment Method : <span className='font-normal'>{order.paymentMethod}</span></div>
+                        {/* <div className='font-semibold'>Payment Method : <span className='font-normal'>{order.paymentMethod}</span></div> */}
                     </div>
 
                     <div className='flex flex-row gap-5'>
@@ -96,12 +95,12 @@ const DisplayOrders = ({ order }) => {
 
                     <div className='flex flex-row' >
                         <div>
-                            <div className='font-semibold'>{selectedDeliveryPerson.username}</div>
-                            <div className=''>{selectedDeliveryPerson.phoneNumber}</div>
+                            <div className='font-semibold'>{order.deliveryPersonId.username}</div>
+                            <div className=''>{order.deliveryPersonId.phoneNumber}</div>
                             <div onClick={handleImageClick} className='bg-gray-800 text-white hover:bg-gray-600 rounded-lg px-1'>Change Delivery Person</div>
                         </div>
 
-                        <img src={selectedDeliveryPerson.image} className='w-10 h-10 mx-auto rounded-lg' />
+                        <img src={order.deliveryPersonId.image} className='w-10 h-10 mx-auto rounded-lg' />
                     </div>
                     <div className=''>Order Date : {order.createdAt}</div>
                     <div className=''>

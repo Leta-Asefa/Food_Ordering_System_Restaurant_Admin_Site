@@ -91,7 +91,7 @@ const Profile = () => {
                 // Structure location as { type: 'Point', coordinates: [latitude, longitude] }
                 const location = {
                     type: 'Point',
-                    coordinates: [position.coords.latitude, position.coords.longitude],
+                    coordinates: [position.coords.longitude,position.coords.latitude ],
                 };
                 setFormData({
                     ...formData,
