@@ -65,23 +65,21 @@ const DisplayOrders = ({ order }) => {
         <div className='p-2 rounded-lg bg-gray-200'>
             <div className='flex justify-between font-extrabold w-full text-sm border-b-2 border-gray-300 mb-1'>
                 <div className=''>Order ID : {order._id}</div>
-                {/* <div>Customer Name : {order.userId.username}</div>
-                <div>Customer Contact : {order.userId.phoneNumber}</div> */}
+                <div>Customer Name : {order.userId.username}</div>
+                <div>Customer Contact : {order.userId.phoneNumber}</div>
             </div>
             <div className='flex flex-row justify-between'>
                 <div>
 
-                    <div className='flex flex-row gap-3'>
+                    <div className='flex gap-x-3 gap-y-1 flex-grow flex-wrap p-1 pl-0'>
                         <div className='font-semibold'>Order Items : </div>
                         {order.items.map((item) => {
-                            return <div> {item.item.name} ({item.quantity}X)  </div>
+                            return <div className='p-0'> {item.item.name} ({item.quantity}X) </div>
                         })}
                     </div>
 
                     <div className=''>
-                        {/* <div className='font-semibold'>Payment Status : <span className='text-green-500 '>{order.payment.status}</span> </div> */}
                         <div className='font-semibold'>Total : <span className='font-normal'>{order.totalAmount} ETB</span> </div>
-                        {/* <div className='font-semibold'>Payment Method : <span className='font-normal'>{order.paymentMethod}</span></div> */}
                     </div>
 
                     <div className='flex flex-row gap-5'>
@@ -95,12 +93,16 @@ const DisplayOrders = ({ order }) => {
 
                     <div className='flex flex-row' >
                         <div>
-                            <div className='font-semibold'>{order.deliveryPersonId.username}</div>
-                            <div className=''>{order.deliveryPersonId.phoneNumber}</div>
-                            <div onClick={handleImageClick} className='bg-gray-800 text-white hover:bg-gray-600 rounded-lg px-1'>Change Delivery Person</div>
+                            <div className='font-semibold'>{order.deliveryPersonId.username || "Not Assigned !"}</div>
+                            <div className=''>{order.deliveryPersonId.phoneNumber || 'Not Assigned !'}</div>
+                            <div
+                                onClick={handleImageClick}
+                                className={`bg-gray-800 text-white hover:bg-gray-600 rounded-lg px-1 ${order.status==='Processing'?'visible':'hidden'}`}
+                            >
+                                Change Delivery Person</div>
                         </div>
 
-                        <img src={order.deliveryPersonId.image} className='w-10 h-10 mx-auto rounded-lg' />
+                        <img src={order.deliveryPersonId.image || '/profile.svg'} className='w-10 h-10 mx-auto rounded-lg' />
                     </div>
                     <div className=''>Order Date : {order.createdAt}</div>
                     <div className=''>

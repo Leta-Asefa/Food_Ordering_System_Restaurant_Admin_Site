@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useAuthUserContext } from '../../../contexts/AuthUserContext';
+import { useSocketContext } from '../../../contexts/SocketContext';
 
 const Modal = ({ isOpen, onClose, updateDeliveryPerson, }) => {
 
@@ -8,7 +9,22 @@ const Modal = ({ isOpen, onClose, updateDeliveryPerson, }) => {
   const [theirOwnDeliveryPersonList, setTheirOwnDeliveryPersonList] = useState([])
   const { authUser } = useAuthUserContext()
   const [showOurs, setShowOurs] = useState(true);
-  const [showRominas, setShowRominas] = useState(true);
+  const [showTheirs, setShowTheirs] = useState(true);
+  const [updateDeliveryPersonLists, setUpdateDeliveryPersonLists] = useState(false)
+  const socket = useSocketContext()
+
+
+  useEffect(() => {
+    if (socket) {
+
+      socket.on('updateDeliveryPersonLists', (data) => setUpdateDeliveryPersonLists(!updateDeliveryPerson));
+
+
+      return () => socket.off('updateDeliveryPersonLists')
+    }
+  }, [socket])
+
+
 
   useEffect(() => {
     async function get() {
@@ -26,7 +42,7 @@ const Modal = ({ isOpen, onClose, updateDeliveryPerson, }) => {
     }
 
     get();
-  }, []);
+  }, [updateDeliveryPersonLists]);
 
 
   if (!isOpen) return null;
@@ -34,13 +50,12 @@ const Modal = ({ isOpen, onClose, updateDeliveryPerson, }) => {
 
   return (
     <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-5">
-      <div className="bg-white rounded-lg p-10 w-full h-full overflow-scroll">
+      <div className="bg-white rounded-lg px-5 py-3 w-full h-full overflow-scroll">
 
-        <button onClick={onClose} className="mt-4 mr-96 bg-red-500 text-white text-right px-4 py-2 rounded-lg">
-          Close
-        </button>
-
-        <h2 className="text-lg font-bold mb-4">Select Active Delivery Person</h2>
+        <div className='flex justify-between'>
+          <button onClick={onClose} className="mt-4 mr-96 bg-red-500 text-white text-right px-4 py-2 rounded-lg">X</button>
+          <h2 className="text-lg font-bold mb-4">Select Active Delivery Person</h2>
+        </div>
 
         <ul className="w-full">
 
@@ -48,14 +63,14 @@ const Modal = ({ isOpen, onClose, updateDeliveryPerson, }) => {
           {/* Romina's Dropdown */}
           <li className="mt-4">
             <button
-              onClick={() => setShowRominas(!showRominas)}
+              onClick={() => setShowTheirs(!showTheirs)}
               className="flex justify-between items-center w-full bg-gray-200 p-2 rounded-lg"
             >
               <h1 className="text-lg font-semibold">Romina's</h1>
-              <span>{showRominas ? "▲" : "▼"}</span>
+              <span>{showTheirs ? "▲" : "▼"}</span>
             </button>
 
-            {showRominas && (
+            {showTheirs && (
               <ul className="pl-4 mt-2">
                 {theirOwnDeliveryPersonList.map((person) => (
                   <li key={person._id} className="mb-2">

@@ -7,10 +7,10 @@ import { AuthUserContextProvider } from './contexts/AuthUserContext.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <SocketContextProvider>
-      <AuthUserContextProvider>
+    <AuthUserContextProvider>
+      <SocketContextProvider>
         <App />
-      </AuthUserContextProvider>
-    </SocketContextProvider>
+      </SocketContextProvider>
+    </AuthUserContextProvider>
   </StrictMode>
 )

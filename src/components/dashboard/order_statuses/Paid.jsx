@@ -2,13 +2,54 @@ import React, { useEffect, useState } from 'react';
 import DisplayOrders from './DisplayOrders';
 import axios from 'axios';
 import { useAuthUserContext } from '../../../contexts/AuthUserContext';
+import { useSocketContext } from '../../../contexts/SocketContext';
 
 const Paid = () => {
 
     const [orders, setOrders] = useState([])
     const { authUser } = useAuthUserContext()
-        const [filteredOrders, setFilteredOrders] = useState(orders);
+    const [filteredOrders, setFilteredOrders] = useState(orders);
     const [searchQuery, setSearchQuery] = useState('');
+    const socket = useSocketContext()
+
+    useEffect(() => {
+        if (socket) {
+    
+            socket.on('offerAccepted', (data) => {
+                setOrders((prevOrders) => 
+                    prevOrders.map(order => 
+                        order._id === data.orderId 
+                            ? { ...order, deliveryPersonId: data.deliveryPersonId } 
+                            : order
+                    )
+                );
+            });
+            
+
+          return () => socket.off('offerAccepted')
+        }
+      }, [socket])
+
+
+      useEffect(() => {
+        if (socket) {
+    
+            socket.on('offerNotAccepted', (data) => {
+                setOrders((prevOrders) => 
+                    prevOrders.map(order => 
+                        order._id === data.orderId 
+                            ? { ...order, deliveryPersonId: data.deliveryPersonId } 
+                            : order
+                    )
+                );
+            });
+            
+
+          return () => socket.off('offerNotAccepted')
+        }
+      }, [socket])
+
+
 
     // This will run on search query change and update filtered orders
     useEffect(() => {
@@ -28,9 +69,10 @@ const Paid = () => {
     }, [searchQuery]); // Will re-run the filter on every search query change
 
 
+
     useEffect(() => {
         async function get() {
-            const response = await axios.get(`http://localhost:4000/order/restaurant/${authUser._id}/status/Paid`, {
+            const response = await axios.get(`http://localhost:4000/order/restaurant/${authUser._id}/status/Processing`, {
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -45,6 +87,7 @@ const Paid = () => {
 
 
     }, [])
+
     return (
         <div>
             {/* Search Input */}
