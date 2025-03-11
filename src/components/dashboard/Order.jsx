@@ -7,7 +7,7 @@ const Order = () => {
     const statuses=[
         { to: '/orders/all', label: 'All', icon: <FaList /> },
         { to: '/orders/pending', label: 'Pending', icon: <FaHourglassHalf /> },
-        { to: '/orders/paid', label: 'Processing', icon: <FaHourglassHalf /> },
+        { to: '/orders/processing', label: 'Processing', icon: <FaHourglassHalf /> },
         { to: '/orders/ontransit', label: 'On Transit', icon: <FaTruck /> },
         { to: '/orders/delivered', label: 'Delivered', icon: <FaCheckCircle /> },
         { to: '/orders/cancelled', label: 'Cancelled', icon: <FaTimesCircle /> }

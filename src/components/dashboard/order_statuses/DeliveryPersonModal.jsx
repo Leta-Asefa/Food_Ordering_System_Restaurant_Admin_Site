@@ -2,54 +2,13 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useAuthUserContext } from '../../../contexts/AuthUserContext';
 import { useSocketContext } from '../../../contexts/SocketContext';
+import { useRef } from 'react';
 
-const Modal = ({ isOpen, onClose, updateDeliveryPerson, }) => {
-
-  const [ourDeliveryPersonList, setOurDeliveryPersonList] = useState([])
-  const [theirOwnDeliveryPersonList, setTheirOwnDeliveryPersonList] = useState([])
-  const { authUser } = useAuthUserContext()
+const Modal = ({ isOpen, onClose, updateDeliveryPerson,ourDeliveryPersonList,theirOwnDeliveryPersonList }) => {
+  
   const [showOurs, setShowOurs] = useState(true);
   const [showTheirs, setShowTheirs] = useState(true);
-  const [isLoading,setIsLoading]=useState(false)
   
-
-
-  useEffect(() => { 
-
-    async function get() {
-
-      try {
-        
-        const response = await axios.get(`http://localhost:4000/gps/get_nearby_locations/${authUser.location.coordinates[0]}/${authUser.location.coordinates[1]}`, { withCredentials: true })
-        
-        console.log(response.data)
-        
-        let ours = []
-        let theirs = []
-        
-        response.data.nearbyDeliveryPeople.forEach(deliveryPerson => {
-          if (deliveryPerson.employer === authUser.name)
-            theirs.push(deliveryPerson);
-          else if (deliveryPerson.employer === 'us')
-            ours.push(deliveryPerson);
-        });
-        
-
-        setOurDeliveryPersonList(ours)
-        setTheirOwnDeliveryPersonList(theirs)
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }finally{
-        setIsLoading(false)
-      }
-
-    }
-    
-    setIsLoading(true)
-    get();
-  }, []);
-
-
   if (!isOpen) return null;
 
 
@@ -62,11 +21,7 @@ const Modal = ({ isOpen, onClose, updateDeliveryPerson, }) => {
           <h2 className="text-lg font-bold mb-4">Select Active Delivery Person</h2>
         </div>
 
-        {
-
-          isLoading? (  <div className="flex justify-center items-center h-40">
-            <div className="w-12 h-12 border-4 border-gray-300 border-t-blue-600 rounded-full animate-spin"></div>
-          </div>) : (
+       
             <ul className="w-full">
 
 
@@ -129,9 +84,9 @@ const Modal = ({ isOpen, onClose, updateDeliveryPerson, }) => {
   
   
           </ul>
-          )
+          
 
-        }
+        
 
       
 

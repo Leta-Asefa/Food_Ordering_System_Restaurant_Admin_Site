@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Modal from './DeliveryPersonModal';
 import axios from 'axios';
 
-const DisplayOrders = ({ order }) => {
+const DisplayOrders = ({ order,ourDeliveryPersonList,theirOwnDeliveryPersonList }) => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedDeliveryPerson, setSelectedDeliveryPerson] = useState(order.deliveryPersonId);
@@ -124,7 +124,13 @@ const DisplayOrders = ({ order }) => {
             </div>
 
 
-            <Modal isOpen={isModalOpen} onClose={handleCloseModal} updateDeliveryPerson={updateDeliveryPerson} />
+            <Modal 
+            isOpen={isModalOpen} 
+            onClose={handleCloseModal} 
+            updateDeliveryPerson={updateDeliveryPerson} 
+            ourDeliveryPersonList={ourDeliveryPersonList}
+            theirOwnDeliveryPersonList={theirOwnDeliveryPersonList}
+            />
 
         </div>
     );

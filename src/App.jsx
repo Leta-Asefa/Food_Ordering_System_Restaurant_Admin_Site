@@ -15,7 +15,6 @@ import All from './components/dashboard/order_statuses/All';
 import Pending from './components/dashboard/order_statuses/Pending';
 import Delivered from './components/dashboard/order_statuses/Delivered';
 import OnTransit from './components/dashboard/order_statuses/OnTransit';
-import Paid from './components/dashboard/order_statuses/Paid';
 import MenuLayout from './layouts/Menu';
 import AddItem from './components/dashboard/menu_navigation/AddItem';
 import Food from './components/dashboard/menu_navigation/Food';
@@ -34,6 +33,7 @@ import PromotionLayout from './layouts/Promotion';
 import CreateNew from './components/dashboard/promotion/CreateNew';
 import PromotionList from './components/dashboard/promotion/PromotionList';
 import UnderApplication from './components/dashboard/promotion/UnderApplication';
+import Processing from './components/dashboard/order_statuses/Processing';
 
 function App() {
 
@@ -66,7 +66,7 @@ function App() {
           <Route element={<OrderLayout />}>
             <Route path="/orders/all" element={<All />} />
             <Route path="/orders/pending" element={<Pending />} />
-            <Route path="/orders/paid" element={<Paid />} />
+            <Route path="/orders/processing" element={<Processing />} />
             <Route path="/orders/delivered" element={<Delivered />} />
             <Route path="/orders/ontransit" element={<OnTransit />} />
             <Route path="/orders/cancelled" element={<Cancelled />} />

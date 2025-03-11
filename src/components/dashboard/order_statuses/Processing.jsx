@@ -4,50 +4,87 @@ import axios from 'axios';
 import { useAuthUserContext } from '../../../contexts/AuthUserContext';
 import { useSocketContext } from '../../../contexts/SocketContext';
 
-const Paid = () => {
+const Processing = () => {
 
     const [orders, setOrders] = useState([])
     const { authUser } = useAuthUserContext()
     const [filteredOrders, setFilteredOrders] = useState(orders);
     const [searchQuery, setSearchQuery] = useState('');
     const socket = useSocketContext()
+    const [ourDeliveryPersonList, setOurDeliveryPersonList] = useState([])
+    const [theirOwnDeliveryPersonList, setTheirOwnDeliveryPersonList] = useState([])
 
     useEffect(() => {
         if (socket) {
-    
+
             socket.on('offerAccepted', (data) => {
-                setOrders((prevOrders) => 
-                    prevOrders.map(order => 
-                        order._id === data.orderId 
-                            ? { ...order, deliveryPersonId: data.deliveryPersonId } 
+                setOrders((prevOrders) =>
+                    prevOrders.map(order =>
+                        order._id === data.orderId
+                            ? { ...order, deliveryPersonId: data.deliveryPersonId }
                             : order
                     )
                 );
             });
-            
 
-          return () => socket.off('offerAccepted')
+
+            return () => socket.off('offerAccepted')
         }
-      }, [socket])
+    }, [socket])
 
 
-      useEffect(() => {
+    useEffect(() => {
         if (socket) {
-    
+
             socket.on('offerNotAccepted', (data) => {
-                setOrders((prevOrders) => 
-                    prevOrders.map(order => 
-                        order._id === data.orderId 
-                            ? { ...order, deliveryPersonId: data.deliveryPersonId } 
+                setOrders((prevOrders) =>
+                    prevOrders.map(order =>
+                        order._id === data.orderId
+                            ? { ...order, deliveryPersonId: data.deliveryPersonId }
                             : order
                     )
                 );
             });
-            
 
-          return () => socket.off('offerNotAccepted')
+
+            return () => socket.off('offerNotAccepted')
         }
-      }, [socket])
+    }, [socket])
+
+
+    useEffect(() => {
+
+        async function get() {
+
+            try {
+
+                const response = await axios.get(`http://localhost:4000/gps/get_nearby_locations/${authUser.location.coordinates[0]}/${authUser.location.coordinates[1]}`, { withCredentials: true })
+
+                console.log("FTW ", response.data)
+
+                let ours = []
+                let theirs = []
+
+                response.data.nearbyDeliveryPeople.forEach(deliveryPerson => {
+                    if (deliveryPerson.employer === authUser.name)
+                        theirs.push(deliveryPerson);
+                    else if (deliveryPerson.employer === 'us')
+                        ours.push(deliveryPerson);
+                });
+
+
+                setOurDeliveryPersonList(ours)
+                setTheirOwnDeliveryPersonList(theirs)
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            } finally {
+            }
+
+        }
+
+        get();
+    }, [authUser]);
+
 
 
 
@@ -105,7 +142,11 @@ const Paid = () => {
             <div className='bg-gray-50 px-5 py-1 rounded-lg overflow-hidden text-xs  space-y-2'>
                 {
                     orders.map(order => {
-                        return <DisplayOrders order={order} />
+                        return <DisplayOrders 
+                        order={order} 
+                        theirOwnDeliveryPersonList={theirOwnDeliveryPersonList} 
+                        ourDeliveryPersonList={ourDeliveryPersonList}
+                        />
                     })
                 }
             </div>
@@ -113,4 +154,4 @@ const Paid = () => {
     );
 };
 
-export default Paid;
+export default Processing;

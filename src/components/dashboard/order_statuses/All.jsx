@@ -9,6 +9,8 @@ const All = () => {
     const [orders, setOrders] = useState([])
     const [filteredOrders, setFilteredOrders] = useState(orders);
     const [searchQuery, setSearchQuery] = useState('');
+    const [ourDeliveryPersonList, setOurDeliveryPersonList] = useState([])
+    const [theirOwnDeliveryPersonList, setTheirOwnDeliveryPersonList] = useState([])
 
     // This will run on search query change and update filtered orders
     useEffect(() => {
@@ -48,6 +50,40 @@ const All = () => {
 
     }, [])
 
+    useEffect(() => {
+
+        async function get() {
+
+            try {
+
+                const response = await axios.get(`http://localhost:4000/gps/get_nearby_locations/${authUser.location.coordinates[0]}/${authUser.location.coordinates[1]}`, { withCredentials: true })
+
+                console.log("FTW ", response.data)
+
+                let ours = []
+                let theirs = []
+
+                response.data.nearbyDeliveryPeople.forEach(deliveryPerson => {
+                    if (deliveryPerson.employer === authUser.name)
+                        theirs.push(deliveryPerson);
+                    else if (deliveryPerson.employer === 'us')
+                        ours.push(deliveryPerson);
+                });
+
+
+                setOurDeliveryPersonList(ours)
+                setTheirOwnDeliveryPersonList(theirs)
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            } finally {
+            }
+
+        }
+
+        get();
+    }, [authUser]);
+
+
 
 
     return (
@@ -67,7 +103,11 @@ const All = () => {
             {/* Display Orders */}
             <div className='bg-white px-5 py-1 rounded-lg overflow-hidden text-xs space-y-2'>
                 {filteredOrders.map(order => (
-                    <DisplayOrders key={order._id} order={order} />
+                    <DisplayOrders
+                        order={order}
+                        theirOwnDeliveryPersonList={theirOwnDeliveryPersonList}
+                        ourDeliveryPersonList={ourDeliveryPersonList}
+                    />
                 ))}
             </div>
         </div>
