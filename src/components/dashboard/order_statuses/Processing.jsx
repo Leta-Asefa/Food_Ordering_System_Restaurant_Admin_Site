@@ -18,6 +18,7 @@ const Processing = () => {
         if (socket) {
 
             socket.on('offerAccepted', (data) => {
+                console.log("Offer Accepted !")
                 setOrders((prevOrders) =>
                     prevOrders.map(order =>
                         order._id === data.orderId

@@ -3,6 +3,7 @@ import DisplayOrders from './DisplayOrders';
 import { useAuthUserContext } from '../../../contexts/AuthUserContext';
 import axios from 'axios';
 import { FaSearch } from 'react-icons/fa';
+import { useSocketContext } from '../../../contexts/SocketContext';
 
 const All = () => {
     const { authUser } = useAuthUserContext()
@@ -11,9 +12,69 @@ const All = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [ourDeliveryPersonList, setOurDeliveryPersonList] = useState([])
     const [theirOwnDeliveryPersonList, setTheirOwnDeliveryPersonList] = useState([])
+    const socket = useSocketContext()
+
+
+    useEffect(() => {
+        if (socket) {
+
+            socket.on('offerAccepted', (data) => {
+                setOrders((prevOrders) =>
+                    prevOrders.map(order => {
+
+                        if (order._id === data.orderId) {
+                            console.log("Order ", order, "+", data)
+                            return { ...order, deliveryPersonId: data.deliveryPersonId }
+                        }
+                        else
+                            return order
+                    }
+                    )
+                );
+            });
+
+
+            return () => socket.off('offerAccepted')
+        }
+    }, [socket])
+
+
+    useEffect(() => {
+        if (socket) {
+
+            socket.on('offerNotAccepted', (data) => {
+                console.log("Offer Not Accepted !", data)
+                setOrders((prevOrders) => {
+                    return prevOrders.map(order => {
+
+                        if (order._id === data.orderId) {
+                            alert(`Deliver Person declines your offer, please assign another, for customer "${order.userId.username}" `)
+                            return { ...order, deliveryPersonId: data.deliveryPersonId }
+                        }
+                        else
+                            return order
+                    }
+                    );
+                }
+                );
+
+
+            });
+
+
+            return () => socket.off('offerNotAccepted')
+        }
+    }, [socket])
+
+
 
     // This will run on search query change and update filtered orders
     useEffect(() => {
+
+        if (!searchQuery)
+            setFilteredOrders(orders)
+
+
         const filtered = orders.filter(order => {
             const searchTerm = searchQuery.toLowerCase();
             return (
@@ -27,7 +88,7 @@ const All = () => {
             );
         });
         setFilteredOrders(filtered);
-    }, [searchQuery]); // Will re-run the filter on every search query change
+    }, [searchQuery, orders]); // Will re-run the filter on every search query change
 
     useEffect(() => {
         async function get() {

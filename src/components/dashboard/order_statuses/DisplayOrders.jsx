@@ -17,14 +17,17 @@ const DisplayOrders = ({ order,ourDeliveryPersonList,theirOwnDeliveryPersonList 
 
     const updateDeliveryPerson = async (person) => {
 
+        console.log("Person",person)
+
         try {
-            const response = await axios.get(`http://localhost:4000/order/${order._id}/deliveryoffer/${person._id}`, {
+            const response = await axios.get(`http://localhost:4000/order/${order._id}/deliveryoffer/${person.userId}`, {
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 withCredentials: true,
             });
 
+            console.log("offer",response)
 
             if (response.data.message) {
                 setSelectedDeliveryPerson(person)
@@ -93,8 +96,8 @@ const DisplayOrders = ({ order,ourDeliveryPersonList,theirOwnDeliveryPersonList 
 
                     <div className='flex flex-row' >
                         <div>
-                            <div className='font-semibold'>{order.deliveryPersonId.username || "Not Assigned !"}</div>
-                            <div className=''>{order.deliveryPersonId.phoneNumber || 'Not Assigned !'}</div>
+                            <div className='font-semibold'>{order.deliveryPersonId?.username || "Not Assigned !"}</div>
+                            <div className=''>{order.deliveryPersonId?.phoneNumber || 'Not Assigned !'}</div>
                             <div
                                 onClick={handleImageClick}
                                 className={`bg-gray-800 text-white hover:bg-gray-600 rounded-lg px-1 ${order.status==='Processing'?'visible':'hidden'}`}
@@ -102,7 +105,7 @@ const DisplayOrders = ({ order,ourDeliveryPersonList,theirOwnDeliveryPersonList 
                                 Change Delivery Person</div>
                         </div>
 
-                        <img src={order.deliveryPersonId.image || '/profile.svg'} className='w-10 h-10 mx-auto rounded-lg' />
+                        <img src={order.deliveryPersonId?.image || '/profile.svg'} className='w-10 h-10 mx-auto rounded-lg' />
                     </div>
                     <div className=''>Order Date : {order.createdAt}</div>
                     <div className=''>
