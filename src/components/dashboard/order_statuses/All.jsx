@@ -12,6 +12,8 @@ const All = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [ourDeliveryPersonList, setOurDeliveryPersonList] = useState([])
     const [theirOwnDeliveryPersonList, setTheirOwnDeliveryPersonList] = useState([])
+    const [updateActiveDeliveryPeople, setUpdateActiveDeliveryPeople] = useState(false)
+    const [loadingActiveDeliveryPeople,setLoadingActiveDeliveryPeople]=useState(false)
     const socket = useSocketContext()
 
 
@@ -116,6 +118,7 @@ const All = () => {
         async function get() {
 
             try {
+                setLoadingActiveDeliveryPeople(true)
 
                 const response = await axios.get(`http://localhost:4000/gps/get_nearby_locations/${authUser.location.coordinates[0]}/${authUser.location.coordinates[1]}`, { withCredentials: true })
 
@@ -137,12 +140,13 @@ const All = () => {
             } catch (error) {
                 console.error("Error fetching data:", error);
             } finally {
+                setLoadingActiveDeliveryPeople(false)
             }
 
         }
-
+        console.log("refetching")
         get();
-    }, [authUser]);
+    }, [updateActiveDeliveryPeople]);
 
 
 
@@ -168,6 +172,10 @@ const All = () => {
                         order={order}
                         theirOwnDeliveryPersonList={theirOwnDeliveryPersonList}
                         ourDeliveryPersonList={ourDeliveryPersonList}
+                        updateActiveDeliveryPeople={updateActiveDeliveryPeople}
+                        setUpdateActiveDeliveryPeople={setUpdateActiveDeliveryPeople}
+                        loadingActiveDeliveryPeople={loadingActiveDeliveryPeople}
+
                     />
                 ))}
             </div>

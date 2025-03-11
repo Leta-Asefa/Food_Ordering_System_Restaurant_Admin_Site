@@ -4,11 +4,11 @@ import { useAuthUserContext } from '../../../contexts/AuthUserContext';
 import { useSocketContext } from '../../../contexts/SocketContext';
 import { useRef } from 'react';
 
-const Modal = ({ isOpen, onClose, updateDeliveryPerson,ourDeliveryPersonList,theirOwnDeliveryPersonList }) => {
-  
+const Modal = ({ isOpen, onClose, updateDeliveryPerson, ourDeliveryPersonList, theirOwnDeliveryPersonList, loadingActiveDeliveryPeople }) => {
+
   const [showOurs, setShowOurs] = useState(true);
   const [showTheirs, setShowTheirs] = useState(true);
-  
+
   if (!isOpen) return null;
 
 
@@ -21,74 +21,90 @@ const Modal = ({ isOpen, onClose, updateDeliveryPerson,ourDeliveryPersonList,the
           <h2 className="text-lg font-bold mb-4">Select Active Delivery Person</h2>
         </div>
 
-       
-            <ul className="w-full">
+        {
+          loadingActiveDeliveryPeople ? (
+            <div class="flex justify-center items-center h-screen">
+              <div class="border-t-4 border-blue-500 border-solid w-16 h-16 rounded-full animate-spin"></div>
+            </div>
+
+          ) :
+            (
+
+              <ul className="w-full">
 
 
-            {/* Romina's Dropdown */}
-            <li className="mt-4">
-              <button
-                onClick={() => setShowTheirs(!showTheirs)}
-                className="flex justify-between items-center w-full bg-gray-200 p-2 rounded-lg"
-              >
-                <h1 className="text-lg font-semibold">Romina's</h1>
-                <span>{showTheirs ? "▲" : "▼"}</span>
-              </button>
-  
-              {showTheirs && (
-                <div className="pl-4 mt-2">
-                  {theirOwnDeliveryPersonList.map((person) => (
-                    <div key={person._id} className="mb-2">
-                      <button
-                        onClick={() => updateDeliveryPerson(person)}
-                        className="flex items-center justify-between  w-full pl-10 pr-20 py-2 w-fdivl hover:bg-gray-100 rounded-lg"
-                      >
-                        <h1 className="w-56 text-left">{person.username}</h1>
-                        <h1>{person.phoneNumber}</h1>
-                        <img src={person.image} className="w-6 h-6 rounded-md" />
-                      </button>
+                {/* Romina's Dropdown */}
+                <li className="mt-4">
+                  <button
+                    onClick={() => setShowTheirs(!showTheirs)}
+                    className="flex justify-between items-center w-full bg-gray-200 p-2 rounded-lg"
+                  >
+                    <h1 className="text-lg font-semibold">Romina's</h1>
+                    <span>{showTheirs ? "▲" : "▼"}</span>
+                  </button>
+
+                  {showTheirs && (
+                    <div className="pl-4 mt-2">
+                      {theirOwnDeliveryPersonList.map((person) => (
+                        <div key={person._id} className="mb-2">
+                          <button
+                            onClick={() => updateDeliveryPerson(person)}
+                            className="flex items-center justify-between  w-full pl-10 pr-20 py-2 w-fdivl hover:bg-gray-100 rounded-lg"
+                          >
+                            <img src={person.image} className="w-6 h-6 rounded-md" />
+                            <h1 className="w-56 text-left"><b>{person.username}</b></h1>
+                            <h1>{person.phoneNumber}</h1>
+                            <h1>{person.distance}  away</h1>
+                            <h1>{person.duration} to arrive</h1>
+                          </button>
+                        </div>
+                      ))}
                     </div>
-                  ))}
-                </div>
-              )}
-            </li>
-  
-  
-            {/* Ours Dropdown */}
-            <li>
-              <button
-                onClick={() => setShowOurs(!showOurs)}
-                className="flex justify-between items-center w-full bg-gray-200 p-2 rounded-lg"
-              >
-                <h1 className="text-lg font-semibold">Ours</h1>
-                <span>{showOurs ? "▲" : "▼"}</span>
-              </button>
-  
-              {showOurs && (
-                <ul className="pl-4 mt-2">
-                  {ourDeliveryPersonList.map((person) => (
-                    <li key={person._id} className="mb-2">
-                      <button
-                        onClick={() => updateDeliveryPerson(person)}
-                        className="flex items-center justify-between pl-10 pr-20 py-2 w-full hover:bg-gray-100 rounded-lg"
-                      >
-                        <h1 className="w-56 text-left">{person.username}</h1>
-                        <h1>{person.phoneNumber}</h1>
-                        <img src={person.image} className="w-6 h-6 rounded-md" />
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </li>
-  
-  
-          </ul>
-          
+                  )}
+                </li>
 
-        
 
-      
+                {/* Ours Dropdown */}
+                <li>
+                  <button
+                    onClick={() => setShowOurs(!showOurs)}
+                    className="flex justify-between items-center w-full bg-gray-200 p-2 rounded-lg"
+                  >
+                    <h1 className="text-lg font-semibold">Ours</h1>
+                    <span>{showOurs ? "▲" : "▼"}</span>
+                  </button>
+
+                  {showOurs && (
+                    <ul className="pl-4 mt-2">
+                      {ourDeliveryPersonList.map((person) => (
+                        <li key={person._id} className="mb-2">
+                          <button
+                            onClick={() => updateDeliveryPerson(person)}
+                            className="flex items-center justify-between pl-10 pr-20 py-2 w-full hover:bg-gray-100 rounded-lg"
+                          >
+                            <img src={person.image} className="w-6 h-6 rounded-md" />
+                            <h1 className="w-56 text-left"><b>{person.username}</b></h1>
+                            <h1>{person.phoneNumber}</h1>
+                            <h1>{person.distance}  away</h1>
+                            <h1>{person.duration} to arrive</h1>
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </li>
+
+
+              </ul>
+
+            )
+        }
+
+
+
+
+
+
 
       </div>
     </div>

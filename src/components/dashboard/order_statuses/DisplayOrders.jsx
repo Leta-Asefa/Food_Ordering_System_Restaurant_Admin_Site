@@ -1,13 +1,18 @@
 import React, { useState } from 'react';
 import Modal from './DeliveryPersonModal';
 import axios from 'axios';
+import { useAuthUserContext } from '../../../contexts/AuthUserContext';
 
-const DisplayOrders = ({ order,ourDeliveryPersonList,theirOwnDeliveryPersonList }) => {
+const DisplayOrders = ({ order, ourDeliveryPersonList, theirOwnDeliveryPersonList, updateActiveDeliveryPeople, setUpdateActiveDeliveryPeople, loadingActiveDeliveryPeople }) => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [selectedDeliveryPerson, setSelectedDeliveryPerson] = useState(order.deliveryPersonId);
     const [status, setStatus] = useState(order.status)
+    const { authUser } = useAuthUserContext()
+
+
+
     const handleImageClick = () => {
+        setUpdateActiveDeliveryPeople(!updateActiveDeliveryPeople)
         setIsModalOpen(true);
     };
 
@@ -17,17 +22,17 @@ const DisplayOrders = ({ order,ourDeliveryPersonList,theirOwnDeliveryPersonList 
 
     const updateDeliveryPerson = async (person) => {
 
-        console.log("Person",person)
+        console.log("Person", person)
 
         try {
-            const response = await axios.get(`http://localhost:4000/order/${order._id}/deliveryoffer/${person.userId}`, {
+            const response = await axios.get(`http://localhost:4000/order/${order._id}/deliveryoffer/${person.userId}/${authUser._id}`, {
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 withCredentials: true,
             });
 
-            console.log("offer",response)
+            console.log("offer", response)
 
             if (response.data.message) {
                 setSelectedDeliveryPerson(person)
@@ -100,7 +105,7 @@ const DisplayOrders = ({ order,ourDeliveryPersonList,theirOwnDeliveryPersonList 
                             <div className=''>{order.deliveryPersonId?.phoneNumber || 'Not Assigned !'}</div>
                             <div
                                 onClick={handleImageClick}
-                                className={`bg-gray-800 text-white hover:bg-gray-600 rounded-lg px-1 ${order.status==='Processing'?'visible':'hidden'}`}
+                                className={`bg-gray-800 text-white hover:bg-gray-600 rounded-lg px-1 ${order.status === 'Processing' ? 'visible' : 'hidden'}`}
                             >
                                 Change Delivery Person</div>
                         </div>
@@ -127,12 +132,14 @@ const DisplayOrders = ({ order,ourDeliveryPersonList,theirOwnDeliveryPersonList 
             </div>
 
 
-            <Modal 
-            isOpen={isModalOpen} 
-            onClose={handleCloseModal} 
-            updateDeliveryPerson={updateDeliveryPerson} 
-            ourDeliveryPersonList={ourDeliveryPersonList}
-            theirOwnDeliveryPersonList={theirOwnDeliveryPersonList}
+            <Modal
+                isOpen={isModalOpen}
+                onClose={handleCloseModal}
+                updateDeliveryPerson={updateDeliveryPerson}
+                ourDeliveryPersonList={ourDeliveryPersonList}
+                theirOwnDeliveryPersonList={theirOwnDeliveryPersonList}
+                loadingActiveDeliveryPeople={loadingActiveDeliveryPeople}
+
             />
 
         </div>
