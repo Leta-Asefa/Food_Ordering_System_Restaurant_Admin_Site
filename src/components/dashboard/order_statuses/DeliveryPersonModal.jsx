@@ -1,8 +1,5 @@
-import axios from 'axios';
-import React, { useEffect, useState } from 'react';
-import { useAuthUserContext } from '../../../contexts/AuthUserContext';
-import { useSocketContext } from '../../../contexts/SocketContext';
-import { useRef } from 'react';
+import React, { useState } from 'react';
+import { FaStar } from 'react-icons/fa';
 
 const Modal = ({ isOpen, onClose, updateDeliveryPerson, ourDeliveryPersonList, theirOwnDeliveryPersonList, loadingActiveDeliveryPeople }) => {
 
@@ -56,6 +53,7 @@ const Modal = ({ isOpen, onClose, updateDeliveryPerson, ourDeliveryPersonList, t
                             <h1>{person.phoneNumber}</h1>
                             <h1>{person.distance}  away</h1>
                             <h1>{person.duration} to arrive</h1>
+                          <h1 className='flex gap-2 items-center'>{person.rating} <FaStar className='text-orange-500'/> </h1>
                           </button>
                         </div>
                       ))}
@@ -87,6 +85,7 @@ const Modal = ({ isOpen, onClose, updateDeliveryPerson, ourDeliveryPersonList, t
                             <h1>{person.phoneNumber}</h1>
                             <h1>{person.distance}  away</h1>
                             <h1>{person.duration} to arrive</h1>
+                            <h1>Rating : {person.rating}</h1>
                           </button>
                         </li>
                       ))}

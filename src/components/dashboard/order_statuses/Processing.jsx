@@ -1,29 +1,36 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import DisplayOrders from './DisplayOrders';
-import axios from 'axios';
 import { useAuthUserContext } from '../../../contexts/AuthUserContext';
+import axios from 'axios';
+import { FaSearch } from 'react-icons/fa';
 import { useSocketContext } from '../../../contexts/SocketContext';
 
 const Processing = () => {
-
-    const [orders, setOrders] = useState([])
     const { authUser } = useAuthUserContext()
+    const [orders, setOrders] = useState([])
     const [filteredOrders, setFilteredOrders] = useState(orders);
     const [searchQuery, setSearchQuery] = useState('');
-    const socket = useSocketContext()
     const [ourDeliveryPersonList, setOurDeliveryPersonList] = useState([])
     const [theirOwnDeliveryPersonList, setTheirOwnDeliveryPersonList] = useState([])
+    const [updateActiveDeliveryPeople, setUpdateActiveDeliveryPeople] = useState(false)
+    const [loadingActiveDeliveryPeople,setLoadingActiveDeliveryPeople]=useState(false)
+    const socket = useSocketContext()
+
 
     useEffect(() => {
         if (socket) {
 
             socket.on('offerAccepted', (data) => {
-                console.log("Offer Accepted !")
                 setOrders((prevOrders) =>
-                    prevOrders.map(order =>
-                        order._id === data.orderId
-                            ? { ...order, deliveryPersonId: data.deliveryPersonId }
-                            : order
+                    prevOrders.map(order => {
+
+                        if (order._id === data.orderId) {
+                            console.log("Order ", order, "+", data)
+                            return { ...order, deliveryPersonId: data.deliveryPersonId }
+                        }
+                        else
+                            return order
+                    }
                     )
                 );
             });
@@ -38,13 +45,22 @@ const Processing = () => {
         if (socket) {
 
             socket.on('offerNotAccepted', (data) => {
-                setOrders((prevOrders) =>
-                    prevOrders.map(order =>
-                        order._id === data.orderId
-                            ? { ...order, deliveryPersonId: data.deliveryPersonId }
-                            : order
-                    )
+                console.log("Offer Not Accepted !", data)
+                setOrders((prevOrders) => {
+                    return prevOrders.map(order => {
+
+                        if (order._id === data.orderId) {
+                            alert(`Deliver Person declines your offer, please assign another, for customer "${order.userId.username}" `)
+                            return { ...order, deliveryPersonId: data.deliveryPersonId }
+                        }
+                        else
+                            return order
+                    }
+                    );
+                }
                 );
+
+
             });
 
 
@@ -53,11 +69,56 @@ const Processing = () => {
     }, [socket])
 
 
+
+    // This will run on search query change and update filtered orders
+    useEffect(() => {
+
+        if (!searchQuery)
+            setFilteredOrders(orders)
+
+
+        const filtered = orders.filter(order => {
+            const searchTerm = searchQuery.toLowerCase();
+            return (
+                order._id.toLowerCase().includes(searchTerm) ||
+                order.userId.username.toLowerCase().includes(searchTerm) ||
+                order.userId.phoneNumber.toLowerCase().includes(searchTerm) ||
+                order.items.some(item =>
+                    item.item.name.toLowerCase().includes(searchTerm)
+                ) ||
+                order.shippingAddress.address.toLowerCase().includes(searchTerm)
+            );
+        });
+        setFilteredOrders(filtered);
+    }, [searchQuery, orders]); // Will re-run the filter on every search query change
+
+    useEffect(() => {
+        async function get() {
+            const response = await axios.get(`http://localhost:4000/order/restaurant/${authUser._id}/status/Processing`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                withCredentials: true,
+            });
+
+            console.log(response.data)
+
+            setOrders(response.data)
+            setFilteredOrders(response.data)
+
+        }
+
+        get()
+
+
+    }, [])
+
     useEffect(() => {
 
         async function get() {
 
             try {
+                setLoadingActiveDeliveryPeople(true)
 
                 const response = await axios.get(`http://localhost:4000/gps/get_nearby_locations/${authUser.location.coordinates[0]}/${authUser.location.coordinates[1]}`, { withCredentials: true })
 
@@ -79,52 +140,16 @@ const Processing = () => {
             } catch (error) {
                 console.error("Error fetching data:", error);
             } finally {
+                setLoadingActiveDeliveryPeople(false)
             }
 
         }
-
+        console.log("refetching")
         get();
-    }, [authUser]);
+    }, [updateActiveDeliveryPeople]);
 
 
 
-
-    // This will run on search query change and update filtered orders
-    useEffect(() => {
-        const filtered = orders.filter(order => {
-            const searchTerm = searchQuery.toLowerCase();
-            return (
-                order._id.toLowerCase().includes(searchTerm) ||
-                order.userId.username.toLowerCase().includes(searchTerm) ||
-                order.userId.phoneNumber.toLowerCase().includes(searchTerm) ||
-                order.items.some(item =>
-                    item.item.name.toLowerCase().includes(searchTerm)
-                ) ||
-                order.shippingAddress.address.toLowerCase().includes(searchTerm)
-            );
-        });
-        setFilteredOrders(filtered);
-    }, [searchQuery]); // Will re-run the filter on every search query change
-
-
-
-    useEffect(() => {
-        async function get() {
-            const response = await axios.get(`http://localhost:4000/order/restaurant/${authUser._id}/status/Processing`, {
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                withCredentials: true,
-            });
-
-            setOrders(response.data)
-
-        }
-
-        get()
-
-
-    }, [])
 
     return (
         <div>
@@ -140,16 +165,19 @@ const Processing = () => {
                 />
             </div>
 
-            <div className='bg-gray-50 px-5 py-1 rounded-lg overflow-hidden text-xs  space-y-2'>
-                {
-                    orders.map(order => {
-                        return <DisplayOrders 
-                        order={order} 
-                        theirOwnDeliveryPersonList={theirOwnDeliveryPersonList} 
+            {/* Display Orders */}
+            <div className='bg-white px-5 py-1 rounded-lg overflow-hidden text-xs space-y-2'>
+                {filteredOrders.map(order => (
+                    <DisplayOrders
+                        order={order}
+                        theirOwnDeliveryPersonList={theirOwnDeliveryPersonList}
                         ourDeliveryPersonList={ourDeliveryPersonList}
-                        />
-                    })
-                }
+                        updateActiveDeliveryPeople={updateActiveDeliveryPeople}
+                        setUpdateActiveDeliveryPeople={setUpdateActiveDeliveryPeople}
+                        loadingActiveDeliveryPeople={loadingActiveDeliveryPeople}
+
+                    />
+                ))}
             </div>
         </div>
     );

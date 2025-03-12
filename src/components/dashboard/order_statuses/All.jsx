@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import DisplayOrders from './DisplayOrders';
 import { useAuthUserContext } from '../../../contexts/AuthUserContext';
 import axios from 'axios';
-import { FaSearch } from 'react-icons/fa';
+import { FaStar } from 'react-icons/fa';
 import { useSocketContext } from '../../../contexts/SocketContext';
 
 const All = () => {
