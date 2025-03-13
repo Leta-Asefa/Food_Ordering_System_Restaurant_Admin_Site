@@ -41,21 +41,21 @@ const Catering = () => {
   };
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-10 p-6">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4 p-6">
       {foods.map((food) => (
         <div
           key={food._id}
           className="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300 cursor-pointer"
           onClick={() => handleOpenModal(food)}
         >
-          <img
+        <img
             src={food.image}
             alt={food.name}
-            className="w-full h-32 object-cover"
+            className="w-full h-24 object-cover"
           />
-          <div className="p-4">
-            <h2 className="text-xs font-semibold mb-2">{food.name}</h2>
-            <p className="text-gray-800 font-bold">${food.price}</p>
+          <div className="p-1 flex justify-between">
+            <h2 className="text-xs">{food.name}</h2>
+            <p className="text-xs">${food.price}</p>
           </div>
         </div>
       ))}

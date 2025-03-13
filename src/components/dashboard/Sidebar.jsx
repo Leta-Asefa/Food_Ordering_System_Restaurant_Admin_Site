@@ -1,58 +1,74 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { useAuthUserContext } from '../../contexts/AuthUserContext';
+import { FaHome } from 'react-icons/fa';
+import { BiLogOut, BiMenu } from 'react-icons/bi';
+import { CgMenuCake, CgProfile } from 'react-icons/cg';
+import { MdHomeFilled, MdMenuBook, MdMenuOpen, MdPayments } from 'react-icons/md';
+import { GrHome, GrHomeOption, GrLogout, GrOrderedList } from 'react-icons/gr';
+import { TbHomeFilled } from 'react-icons/tb';
+import { SiBillboard } from 'react-icons/si';
+import { PiFlagBannerFill, PiFlagBannerFoldFill } from 'react-icons/pi';
+import { GiKnightBanner } from 'react-icons/gi';
+import { GoGraph, GoReport } from 'react-icons/go';
+import { AiFillInsurance } from 'react-icons/ai';
+import { FcStatistics } from 'react-icons/fc';
+import { BsFileBarGraph } from 'react-icons/bs';
+import { ImProfile } from 'react-icons/im';
+import { CiDeliveryTruck } from 'react-icons/ci';
+import { RiLogoutBoxFill } from 'react-icons/ri';
 
 const Sidebar = () => {
 
-    const {authUser}=useAuthUserContext()
+    const { authUser } = useAuthUserContext()
 
     return (
-        <div className='px-2 py-5 bg-gray-200 h-screen'>
-            <img src={authUser?.image} className='w-16 h-16 object-cover mx-auto rounded-lg'/>
-            <h6 className='text-xs text-center'>Welcome <b>{authUser?.name}'s</b> admin</h6>
-            <div className='flex flex-row justify-center items-center'>
-                <img src={authUser.isApproved?'/verified.svg':'/note.svg'}
-                className='w-4 h-4'
+        <div className='px-2 py-5 bg-gray-900 h-screen'>
+            <h6 className='text-xs text-center text-white'>Welcome <b>{authUser?.name}'s</b> admin</h6>
+            <img src={authUser?.image} className='w-16 h-16 object-cover mx-auto rounded-lg' />
+            <div className='flex flex-row justify-center items-center mb-5'>
+                <img src={authUser.isApproved ? '/verified.svg' : '/note.svg'}
+                    className='w-4 h-4'
                 />
-                <h6 className='text-xs'>{authUser.isApproved? 'Verified Company':'your application is underprocess.'}</h6>
+                <h6 className='text-xs text-white'>{authUser.isApproved ? 'Verified Company' : 'your application is underprocess.'}</h6>
             </div>
-            <NavLink to="/dashboard" className="flex items-center p-2 space-x-3 hover:bg-gray-200 rounded">
-                <img src='/home.svg' className='w-8 h-8' />
-                <span>Home</span>
+            <NavLink to="/dashboard" className="flex items-center p-2 space-x-3 hover:bg-gray-800 rounded">
+            <TbHomeFilled className='text-white w5 h-5'/>
+            <span className='text-white text-sm'>Home</span>
             </NavLink>
-            <NavLink to="/orders/all" className="flex items-center p-2 space-x-3 hover:bg-gray-200 rounded">
-                <img src='/order.svg' className='w-8 h-8' />
-                <span>Orders</span>
+            <NavLink to="/orders/all" className="flex items-center p-2 space-x-3 hover:bg-gray-800 rounded">
+            <GrOrderedList className='text-white w5 h-5'/>
+                <span className='text-white text-sm'>Orders</span>
             </NavLink>
-            <NavLink to="/menu/food" className="flex items-center p-2 space-x-3 hover:bg-gray-200 rounded">
-                <img src='/menu.svg' className='w-8 h-8' />
-                <span>Menu</span>
+            <NavLink to="/menu/food" className="flex items-center p-2 space-x-3 hover:bg-gray-800 rounded">
+              <MdMenuBook className='text-white'/>
+                <span className='text-white text-sm'>Menu</span>
             </NavLink>
-            <NavLink to="/promotion" className="flex items-center p-2 space-x-3 hover:bg-gray-200 rounded">
-                <img src='/promotion.svg' className='w-8 h-8' />
-                <span>Promotions</span>
+            <NavLink to="/promotion/create" className="flex items-center p-2 space-x-3 hover:bg-gray-800 rounded">
+            <GiKnightBanner className='text-white w5 h-5'/>
+                <span className='text-white text-sm'>Promotions</span>
             </NavLink>
-            <NavLink to="/report" className="flex items-center p-2 space-x-3 hover:bg-gray-200 rounded">
-                <img src='/report.svg' className='w-8 h-8' />
-                <span>Reports</span>
+            <NavLink to="/report" className="flex items-center p-2 space-x-3 hover:bg-gray-800 rounded">
+            <GoGraph className='text-white w5 h-5'/>
+                <span className='text-white text-sm'>Reports</span>
             </NavLink>
-            <NavLink to="/profile" className="flex items-center p-2 space-x-3 hover:bg-gray-200 rounded">
-            <img src='/profile.svg' className='w-8 h-8'/>
-            <span>Profile</span>
+            <NavLink to="/profile" className="flex items-center p-2 space-x-3 hover:bg-gray-800 rounded">
+            <CgProfile className='text-white w5 h-5'/>
+                <span className='text-white text-sm'>Profile</span>
             </NavLink>
-            <NavLink to="/payment/history" className="flex items-center p-2 space-x-3 hover:bg-gray-200 rounded">
-                <img src='/payment.svg' className='w-8 h-8' />
-                <span>Payment</span>
-            </NavLink>
-
-            <NavLink to="/adddeliveryperson" className="flex items-center p-2 space-x-3 hover:bg-gray-200 rounded">
-                <img src='/logout.svg' className='w-8 h-8' />
-                <span>Add Delivery Person</span>
+            <NavLink to="/payment/refund" className="flex items-center p-2 space-x-3 hover:bg-gray-800 rounded">
+            <MdPayments className='text-white w5 h-5'/>
+                <span className='text-white text-sm'>Payment</span>
             </NavLink>
 
-            <NavLink to="/logout" className="flex items-center p-2 space-x-3 hover:bg-gray-200 rounded">
-                <img src='/logout.svg' className='w-8 h-8' />
-                <span>Logout</span>
+            <NavLink to="/adddeliveryperson" className="flex items-center p-2 space-x-3 hover:bg-gray-800 rounded">
+            <CiDeliveryTruck className='text-white w5 h-5'/>
+                <span className='text-white text-sm'>Add Delivery Person</span>
+            </NavLink>
+
+            <NavLink to="/logout" className="flex items-center p-2 space-x-3 hover:bg-gray-800 rounded">
+            <RiLogoutBoxFill className='text-white w5 h-5'/>
+                <span className='text-white text-sm'>Logout</span>
             </NavLink>
         </div>
     );

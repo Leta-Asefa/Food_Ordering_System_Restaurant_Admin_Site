@@ -70,7 +70,7 @@ const DisplayOrders = ({ order, ourDeliveryPersonList, theirOwnDeliveryPersonLis
 
 
     return (
-        <div className='p-2 rounded-lg bg-gray-200'>
+        <div className='p-2 rounded-lg bg-gray-100'>
             <div className='flex justify-between font-extrabold w-full text-sm border-b-2 border-gray-300 mb-1'>
                 <div className=''>Order ID : {order._id}</div>
                 <div>Customer Name : {order.userId.username}</div>

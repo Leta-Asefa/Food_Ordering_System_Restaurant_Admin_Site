@@ -1,56 +1,34 @@
 import React from 'react';
+import { FaHistory, FaMoneyBill } from 'react-icons/fa';
+import { MdPayment, MdSubscriptions } from 'react-icons/md';
 import { NavLink } from 'react-router-dom';
 
 const Payment = () => {
 
+       const statuses=[
+            { to: '/payment/history', label: 'History', icon: <FaHistory /> },
+            { to: '/payment/refund', label: 'Refund', icon: <FaMoneyBill /> },
+            { to: '/payment/subscription', label: 'Subscription', icon: <MdPayment /> },
+        ]
+
     return (
-        <div className='sticky top-0 bg-orange-400'>
-            <div className='flex flex-row justify-center gap-1 py-5'>
-
-                <NavLink
-                    to='/payment/history'
-                    className={({ isActive }) =>
-                        `w-24 text-center rounded-lg px-4 py-1 hover:opacity-70 ${isActive ? 'bg-orange-400 font-bold text-white' : 'bg-orange-200'
-                        }`
-                    }
-                >
-                    History
-                </NavLink>
-                <NavLink
-                    to='/payment/report'
-                    className={({ isActive }) =>
-                        `w-24 text-center rounded-lg px-4 py-1 hover:opacity-70 ${isActive ? 'bg-green-400 font-bold text-white' : 'bg-green-200'
-                        }`
-                    }
-                >
-                    Report
-                </NavLink>
-                <NavLink
-                    to='/payment/refund'
-                    className={({ isActive }) =>
-                        `w-24 text-center rounded-lg px-4 py-1 hover:opacity-70 ${isActive ? 'bg-blue-400 font-bold text-white' : 'bg-blue-200'
-                        }`
-                    }
-                >
-                    Refund
-                </NavLink>
-                <NavLink
-                    to='/payment/subscription'
-                    className={({ isActive }) =>
-                        `w-24 text-center rounded-lg px-4 py-1 hover:opacity-70 ${isActive ? 'bg-red-400 font-bold text-white' : 'bg-red-200'
-                        }`
-                    }
-                >
-                    Subscription
-                </NavLink>
-
-
-
-            </div>
-
-
-        </div>
-    );
+           <div className="sticky top-0 px-4 pt-2 pb-4 bg-gray-50 shadow-sm flex items-center  justify-center gap-2">
+                   {statuses.map(({ to, label, icon }) => (
+                       <NavLink
+                           key={to}
+                           to={to}
+                           className={({ isActive }) => 
+                               `flex items-center gap-2 px-3 py-1 rounded-md text-xs font-medium transition-all duration-300 shadow-md hover:opacity-80
+                               ${isActive ? 'bg-gray-700 text-white' : 'bg-gray-300 text-gray-800'}`
+                           }
+                       >
+                           <span className="w-4 h-4">{icon}</span>
+                           <span className='text-sm'>{label} </span>
+                       </NavLink>
+                   ))}
+            
+           </div>
+       );
 };
 
 export default Payment;

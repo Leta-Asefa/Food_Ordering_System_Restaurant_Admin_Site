@@ -49,7 +49,7 @@ const Refund = () => {
 
       <button
         onClick={handleRefund}
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+        className="bg-gray-700 hover:bg-gray-900  text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"
       >
         Process Refund
       </button>

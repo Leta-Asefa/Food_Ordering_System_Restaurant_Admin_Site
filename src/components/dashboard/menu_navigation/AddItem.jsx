@@ -110,9 +110,9 @@ const AddItem = () => {
     };
 
     return (
-        <div className="p-6 w-full mx-auto bg-white shadow-md rounded-lg">
-            <h1 className="text-2xl font-bold text-center mb-6">Add Menu Item</h1>
-            <form onSubmit={handleSubmit} className="space-y-4 grid grid-cols-2 gap-5">
+        <div className="px-6 py-3 w-full mx-auto bg-white rounded-lg">
+            <h1 className="text-2xl font-bold text-center mb-3">Add Menu Item</h1>
+            <form onSubmit={handleSubmit} className="space-y-4 grid grid-cols-2 gap-5 w-full">
                 <div>
 
                     {/* Name */}

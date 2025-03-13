@@ -1,48 +1,35 @@
 import React from 'react';
+import { FaList, FaPaperclip, FaPlus } from 'react-icons/fa';
+import { IoFastFood } from 'react-icons/io5';
 import { NavLink } from 'react-router-dom';
 
 const Promotion = () => {
 
-    return (
-        <div className='sticky top-0 bg-orange-400'>
-            <div className='flex flex-row justify-center gap-3 py-5'>
+    const statuses=[
+        { to: '/promotion/create', label: 'Create New', icon: <FaPlus/> },
+        { to: '/promotion/list', label: 'Promotions List', icon: <FaList /> },
+        { to: '/promotion/underapplication', label: 'Under Application', icon: <FaPaperclip /> },
+    ]
 
-                <NavLink
-                    to='/promotion/create'
-                    className={({ isActive }) =>
-                        `w-auto text-center rounded-lg px-4 py-1 hover:opacity-70 ${isActive ? 'bg-orange-400 font-bold text-white' : 'bg-orange-200'
-                        }`
-                    }
-                >
-                    Create New
-                </NavLink>
-                <NavLink
-                    to='/promotion/list'
-                    className={({ isActive }) =>
-                        `w-auto text-center rounded-lg px-4 py-1 hover:opacity-70 ${isActive ? 'bg-green-400 font-bold text-white' : 'bg-green-200'
-                        }`
-                    }
-                >
-                    Promotions List
-                </NavLink>
-                <NavLink
-                    to='/promotion/underapplication'
-                    className={({ isActive }) =>
-                        `w-auto text-center rounded-lg px-4 py-1 hover:opacity-70 ${isActive ? 'bg-blue-400 font-bold text-white' : 'bg-blue-200'
-                        }`
-                    }
-                >
-                    Under Application
-                </NavLink>
-              
+     return (
+               <div className="sticky top-0 px-4 pt-2 pb-4 bg-gray-50 shadow-sm flex items-center  justify-center gap-2">
+                       {statuses.map(({ to, label, icon }) => (
+                           <NavLink
+                               key={to}
+                               to={to}
+                               className={({ isActive }) => 
+                                   `flex items-center gap-2 px-3 py-1 rounded-md text-xs font-medium transition-all duration-300 shadow-md hover:opacity-80
+                                   ${isActive ? 'bg-gray-700 text-white' : 'bg-gray-300 text-gray-800'}`
+                               }
+                           >
+                               <span className="w-4 h-4">{icon}</span>
+                               <span className='text-sm'>{label} </span>
+                           </NavLink>
+                       ))}
+                
+               </div>
+           );
 
-
-
-            </div>
-
-
-        </div>
-    );
 };
 
 export default Promotion;

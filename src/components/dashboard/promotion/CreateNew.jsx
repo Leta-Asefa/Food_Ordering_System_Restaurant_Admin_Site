@@ -92,8 +92,8 @@ const CreateNew = () => {
     };
 
     return (
-        <div className="max-w-lg mx-auto bg-white p-6 rounded-lg shadow-lg">
-            <h2 className="text-2xl font-bold mb-4">Add New Promotion</h2>
+        <div className=" bg-white px-6 rounded-lg shadow-lg">
+            <h2 className="text-2xl font-bold mb-2 text-center">Add New Promotion</h2>
             <form onSubmit={handleSubmit}>
                
 
@@ -130,7 +130,7 @@ const CreateNew = () => {
                     <input type="file" onChange={handleFileChange}  className="w-full px-3 py-2 border rounded-lg" required />
                 </div>
 
-                <button type="submit" className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition" disabled={loading}>
+                <button type="submit" className="w-full bg-gray-700 text-white py-2 px-4 rounded-lg hover:bg-gray-900 transition" disabled={loading}>
                     {loading ? 'Submitting...' : 'Add Promotion'}
                 </button>
             </form>

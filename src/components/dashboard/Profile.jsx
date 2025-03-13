@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useAuthUserContext } from '../../contexts/AuthUserContext';
+import { FaLocationArrow } from 'react-icons/fa';
+import { FaLocationPin } from 'react-icons/fa6';
+import { TbLocationPin } from 'react-icons/tb';
+import { CiLocationOff, CiLocationOn } from 'react-icons/ci';
 const Profile = () => {
     const [formData, setFormData] = useState({
         name: '',
@@ -137,8 +141,8 @@ const Profile = () => {
     
 
     return (
-        <div className="w-full mx-auto mt-4 py-0 px-24 border border-gray-200 rounded-lg shadow-lg">
-            <h2 className="text-2xl font-bold w-96 mx-auto text-center">Profile</h2>
+        <div className="w-full mx-auto  py-0 px-6  rounded-lg shadow-lg">
+            <h2 className="text-2xl font-bold w-96 mx-auto text-center">Restaurant's Profile</h2>
             <form onSubmit={handleSubmit}>
 
                 <div className=" w-24 mx-auto ">
@@ -191,8 +195,9 @@ const Profile = () => {
                     <button
                         type="button"
                         onClick={handleLocationClick}
-                        className="mt-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                        className="mt-2 bg-gray-700 hover:bg-gray-900 text-white text-xs py-1 px-4 rounded focus:outline-none focus:shadow-outline flex justify-between items-center gap-2"
                     >
+            <CiLocationOn className='text-white w5 h-5'/>
                         Use Current Location
                     </button>
                 </div>
@@ -271,7 +276,7 @@ const Profile = () => {
                 <div className="flex items-center justify-between">
                     <button
                         type="submit"
-                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mb-10 rounded focus:outline-none focus:shadow-outline"
+                        className="bg-gray-700 hover:bg-gray-900 text-white font-bold py-2 px-4 mb-10 rounded focus:outline-none focus:shadow-outline w-full"
                     >
                         {isUpdating ? 'Updating ...' : 'Update'}
                     </button>

@@ -154,12 +154,12 @@ const All = () => {
     return (
         <div>
             {/* Search Input */}
-            <div className='flex justify-center items-center px-1'>
+            <div className='flex justify-center items-center px-1 mb-2'>
 
                 <input
                     type="text"
                     placeholder="Search orders..."
-                    className=" w-96 mx-auto border-b border-gray-500  px-4 py-2 text-sm focus:rounded-lg focus:border-white focus:outline-none focus:ring-2 focus:ring-gray-500 bg-white"
+                    className=" w-96 mx-auto border-b border-gray-400  px-4 py-2 text-sm bg-white"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                 />

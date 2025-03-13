@@ -82,7 +82,6 @@ function App() {
 
           <Route element={<PaymentLayout />}>
             <Route path="/payment/history" element={<History />} />
-            <Route path="/payment/report" element={<Report />} />
             <Route path="/payment/refund" element={<Refund />} />
             <Route path="/payment/subscription" element={<Subscription />} />
           </Route>

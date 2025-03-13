@@ -1,54 +1,37 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
+import { FaTruck, FaPlus } from 'react-icons/fa';
+import { IoFastFood } from 'react-icons/io5';
+import { FaBottleWater } from 'react-icons/fa6';
 
 const Menu = () => {
-   
-    return (
-        <div className='flex flex-row justify-center py-7 bg-orange-500 sticky top-0'>
-          
-                       <NavLink
-                              to='/menu/additem'
-                              className={({ isActive }) =>
-                                  `w-auto text-center rounded-lg px-4 py-1 hover:opacity-70 ${isActive ? 'bg-gray-400 font-bold text-white ' : 'bg-gray-100'
-                                  }`
-                              }
-                          >
-                              Add New
-                          </NavLink>
-                          <NavLink
-                              to='/menu/food'
-                              className={({ isActive }) =>
-                                  `w-auto text-center rounded-lg px-4 py-1 hover:opacity-70 ${isActive ? 'bg-orange-400 font-bold text-white' : 'bg-orange-200'
-                                  }`
-                              }
-                          >
-                              Food
-                          </NavLink>
-                          <NavLink
-                              to='/menu/drink'
-                              className={({ isActive }) =>
-                                  `w-auto text-center rounded-lg px-4 py-1 hover:opacity-70 ${isActive ? 'bg-green-400 font-bold text-white' : 'bg-green-200'
-                                  }`
-                              }
-                          >
-                              Drink
-                          </NavLink>
-                          <NavLink
-                              to='/menu/catering'
-                              className={({ isActive }) =>
-                                  `w-auto text-center rounded-lg px-4 py-1 hover:opacity-70 ${isActive ? 'bg-green-400 font-bold text-white' : 'bg-green-200'
-                                  }`
-                              }
-                          >
-                              Catering Packages
-                          </NavLink>
-          
-          
-                   
-          
 
-        </div>
-    );
+    const statuses=[
+            { to: '/menu/additem', label: 'Add New', icon: <FaPlus/> },
+            { to: '/menu/food', label: 'Food', icon: <IoFastFood /> },
+            { to: '/menu/drink', label: 'Drink', icon: <FaBottleWater /> },
+            { to: '/menu/catering', label: 'Catering', icon: <FaTruck /> },
+        ]
+    
+   
+     return (
+           <div className="sticky top-0 px-4 pt-2 pb-4 bg-gray-50 shadow-sm flex items-center  justify-center gap-2">
+                   {statuses.map(({ to, label, icon }) => (
+                       <NavLink
+                           key={to}
+                           to={to}
+                           className={({ isActive }) => 
+                               `flex items-center gap-2 px-3 py-1 rounded-md text-xs font-medium transition-all duration-300 shadow-md hover:opacity-80
+                               ${isActive ? 'bg-gray-700 text-white' : 'bg-gray-300 text-gray-800'}`
+                           }
+                       >
+                           <span className="w-4 h-4">{icon}</span>
+                           <span className='text-sm'>{label} </span>
+                       </NavLink>
+                   ))}
+            
+           </div>
+       );
 };
 
 export default Menu;
