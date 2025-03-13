@@ -34,10 +34,10 @@ const Modal = ({ isOpen, onClose, updateDeliveryPerson, ourDeliveryPersonList, t
                 <li className="mt-4">
                   <button
                     onClick={() => setShowTheirs(!showTheirs)}
-                    className="flex justify-between items-center w-full bg-gray-200 p-2 rounded-lg"
+                    className="flex justify-between items-center w-full bg-gray-900 p-2 rounded-lg"
                   >
-                    <h1 className="text-lg font-semibold">Romina's</h1>
-                    <span>{showTheirs ? "▲" : "▼"}</span>
+                    <h1 className="text-lg font-semibold text-white bg-gray-900">Yours</h1>
+                    <span className='text-white'>{showTheirs ? "▲" : "▼"}</span>
                   </button>
 
                   {showTheirs && (
@@ -63,13 +63,13 @@ const Modal = ({ isOpen, onClose, updateDeliveryPerson, ourDeliveryPersonList, t
 
 
                 {/* Ours Dropdown */}
-                <li>
+                <li className='mt-2'>
                   <button
                     onClick={() => setShowOurs(!showOurs)}
-                    className="flex justify-between items-center w-full bg-gray-200 p-2 rounded-lg"
+                    className="flex justify-between items-center w-full bg-gray-900 p-2 rounded-lg"
                   >
-                    <h1 className="text-lg font-semibold">Ours</h1>
-                    <span>{showOurs ? "▲" : "▼"}</span>
+                    <h1 className="text-lg font-semibold bg-gray-900 text-white">Ours</h1>
+                    <span className='text-white'>{showOurs ? "▲" : "▼"}</span>
                   </button>
 
                   {showOurs && (
