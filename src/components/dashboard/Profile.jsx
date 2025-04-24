@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useAuthUserContext } from '../../contexts/AuthUserContext';
-import { FaLocationArrow } from 'react-icons/fa';
-import { FaLocationPin } from 'react-icons/fa6';
-import { TbLocationPin } from 'react-icons/tb';
-import { CiLocationOff, CiLocationOn } from 'react-icons/ci';
+import { CiLocationOn } from 'react-icons/ci';
 const Profile = () => {
     const [formData, setFormData] = useState({
         name: '',
@@ -22,6 +19,7 @@ const Profile = () => {
     const [bankName, setBankName] = useState('Commercial Bank of Ethiopia (CBE)')
     const [bankAccountName, setBankAccountName] = useState('')
     const [bankAccountNumber, setBankAccountNumber] = useState('')
+    const [pictures, setPictures] = useState(authUser.pictures)
 
     const CLOUDINARY_URL = 'https://api.cloudinary.com/v1_1/dpavrc7wd/image/upload';
     const CLOUDINARY_UPLOAD_PRESET = 'ml_default';
@@ -77,7 +75,7 @@ const Profile = () => {
         });
     };
 
-    const handleImageChange = async (e) => {
+    const handleProfilePictureChange = async (e) => {
         const file = e.target.files[0];
         const formData = new FormData();
         formData.append('file', file);
@@ -181,6 +179,58 @@ const Profile = () => {
 
     }
 
+    const handleImageChange = async (index) => {
+        const fileInput = document.createElement("input");
+        fileInput.type = "file";
+        fileInput.accept = "image/*";
+        fileInput.onchange = async (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                const formData = new FormData();
+                formData.append("file", file);
+                formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+
+                try {
+                    const response = await fetch(CLOUDINARY_URL, {
+                        method: "POST",
+                        body: formData,
+                    });
+                    const data = await response.json();
+                    if (data.secure_url) {
+                        setPictures((prevImages) => {
+                            const updatedImages = [...prevImages];
+                            updatedImages[index] = data.secure_url;
+                            return updatedImages;
+                        });
+                    }
+                } catch (error) {
+                    console.error("Error uploading image:", error);
+                }
+            }
+        };
+        fileInput.click();
+    };
+
+    const handleUpdatePictures = async () => {
+        try {
+
+            console.log(pictures)
+            const response = await fetch(`http://localhost:4000/restaurant/update/${authUser._id}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ pictures, _id: authUser._id }),
+            });
+            console.log(response)
+
+            if (response.ok) {
+                console.log("Images successfully updated!");
+            } else {
+                console.error("Failed to update images");
+            }
+        } catch (error) {
+            console.error("Error sending images to backend:", error);
+        }
+    };
 
     return (
         <div className="w-full mx-auto  py-0 px-6  rounded-lg shadow-lg">
@@ -199,12 +249,15 @@ const Profile = () => {
                         name="image"
                         id="image"
                         accept="image/*"
-                        onChange={handleImageChange}
+                        onChange={handleProfilePictureChange}
                         className="invisible"
                     />
                 </div>
 
                 <div className='h-0.5 w-full bg-gray-300 mb-4'></div>
+
+
+
 
                 <div className="mb-4">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
@@ -262,16 +315,139 @@ const Profile = () => {
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="cuisine">
                         Cuisine
                     </label>
-                    <input
-                        type="text"
-                        name="cuisine"
+
+                    <select
                         id="cuisine"
+                        name="cuisine"
                         value={formData.cuisine}
+                        className="p-1.5"
                         onChange={handleChange}
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        required
-                    />
+                    >
+                        <option value="🇦🇫 Afghan">🇦🇫 Afghan</option>
+                        <option value="🇦🇱 Albanian">🇦🇱 Albanian</option>
+                        <option value="🇩🇿 Algerian">🇩🇿 Algerian</option>
+                        <option value="🇺🇸 American">🇺🇸 American</option>
+                        <option value="🇦🇩 Andorran">🇦🇩 Andorran</option>
+                        <option value="🇦🇴 Angolan">🇦🇴 Angolan</option>
+                        <option value="🇦🇷 Argentinian">🇦🇷 Argentinian</option>
+                        <option value="🇦🇲 Armenian">🇦🇲 Armenian</option>
+                        <option value="🇦🇺 Australian">🇦🇺 Australian</option>
+                        <option value="🇦🇹 Austrian">🇦🇹 Austrian</option>
+                        <option value="🇦🇿 Azerbaijani">🇦🇿 Azerbaijani</option>
+                        <option value="🇧🇩 Bangladeshi">🇧🇩 Bangladeshi</option>
+                        <option value="🇧🇾 Belarusian">🇧🇾 Belarusian</option>
+                        <option value="🇧🇪 Belgian">🇧🇪 Belgian</option>
+                        <option value="🇧🇿 Belizean">🇧🇿 Belizean</option>
+                        <option value="🇧🇴 Bolivian">🇧🇴 Bolivian</option>
+                        <option value="🇧🇦 Bosnian">🇧🇦 Bosnian</option>
+                        <option value="🇧🇷 Brazilian">🇧🇷 Brazilian</option>
+                        <option value="🇬🇧 British">🇬🇧 British</option>
+                        <option value="🇧🇬 Bulgarian">🇧🇬 Bulgarian</option>
+                        <option value="🇧🇫 Burkinabe">🇧🇫 Burkinabe</option>
+                        <option value="🇰🇭 Cambodian">🇰🇭 Cambodian</option>
+                        <option value="🇨🇲 Cameroonian">🇨🇲 Cameroonian</option>
+                        <option value="🇨🇦 Canadian">🇨🇦 Canadian</option>
+                        <option value="🏝️ Caribbean">🏝️ Caribbean</option>
+                        <option value="🇨🇱 Chilean">🇨🇱 Chilean</option>
+                        <option value="🇨🇳 Chinese">🇨🇳 Chinese</option>
+                        <option value="🇨🇴 Colombian">🇨🇴 Colombian</option>
+                        <option value="🇨🇷 Costa Rican">🇨🇷 Costa Rican</option>
+                        <option value="🇭🇷 Croatian">🇭🇷 Croatian</option>
+                        <option value="🇨🇺 Cuban">🇨🇺 Cuban</option>
+                        <option value="🇨🇾 Cypriot">🇨🇾 Cypriot</option>
+                        <option value="🇨🇿 Czech">🇨🇿 Czech</option>
+                        <option value="🇩🇰 Danish">🇩🇰 Danish</option>
+                        <option value="🇩🇯 Djiboutian">🇩🇯 Djiboutian</option>
+                        <option value="🇩🇴 Dominican">🇩🇴 Dominican</option>
+                        <option value="🇳🇱 Dutch">🇳🇱 Dutch</option>
+                        <option value="🇪🇨 Ecuadorian">🇪🇨 Ecuadorian</option>
+                        <option value="🇪🇬 Egyptian">🇪🇬 Egyptian</option>
+                        <option value="🇸🇻 Salvadoran">🇸🇻 Salvadoran</option>
+                        <option value="🇪🇪 Estonian">🇪🇪 Estonian</option>
+                        <option value="🇪🇹 Ethiopian">🇪🇹 Ethiopian</option>
+                        <option value="🇫🇮 Finnish">🇫🇮 Finnish</option>
+                        <option value="🇫🇷 French">🇫🇷 French</option>
+                        <option value="🇬🇦 Gabonese">🇬🇦 Gabonese</option>
+                        <option value="🇬🇪 Georgian">🇬🇪 Georgian</option>
+                        <option value="🇩🇪 German">🇩🇪 German</option>
+                        <option value="🇬🇭 Ghanaian">🇬🇭 Ghanaian</option>
+                        <option value="🇬🇷 Greek">🇬🇷 Greek</option>
+                        <option value="🇬🇹 Guatemalan">🇬🇹 Guatemalan</option>
+                        <option value="🇭🇹 Haitian">🇭🇹 Haitian</option>
+                        <option value="🇭🇳 Honduran">🇭🇳 Honduran</option>
+                        <option value="🇭🇺 Hungarian">🇭🇺 Hungarian</option>
+                        <option value="🇮🇸 Icelandic">🇮🇸 Icelandic</option>
+                        <option value="🇮🇳 Indian">🇮🇳 Indian</option>
+                        <option value="🇮🇩 Indonesian">🇮🇩 Indonesian</option>
+                        <option value="🇮🇷 Iranian">🇮🇷 Iranian</option>
+                        <option value="🇮🇶 Iraqi">🇮🇶 Iraqi</option>
+                        <option value="🇮🇪 Irish">🇮🇪 Irish</option>
+                        <option value="🇮🇱 Israeli">🇮🇱 Israeli</option>
+                        <option value="🇮🇹 Italian">🇮🇹 Italian</option>
+                        <option value="🇯🇲 Jamaican">🇯🇲 Jamaican</option>
+                        <option value="🇯🇵 Japanese">🇯🇵 Japanese</option>
+                        <option value="🇯🇴 Jordanian">🇯🇴 Jordanian</option>
+                        <option value="🇰🇿 Kazakh">🇰🇿 Kazakh</option>
+                        <option value="🇰🇪 Kenyan">🇰🇪 Kenyan</option>
+                        <option value="🇰🇷 Korean">🇰🇷 Korean</option>
+                        <option value="🇱🇧 Lebanese">🇱🇧 Lebanese</option>
+                        <option value="🇱🇷 Liberian">🇱🇷 Liberian</option>
+                        <option value="🇱🇹 Lithuanian">🇱🇹 Lithuanian</option>
+                        <option value="🇱🇺 Luxembourgish">🇱🇺 Luxembourgish</option>
+                        <option value="🇲🇾 Malaysian">🇲🇾 Malaysian</option>
+                        <option value="🇲🇱 Malian">🇲🇱 Malian</option>
+                        <option value="🇲🇽 Mexican">🇲🇽 Mexican</option>
+                        <option value="🇲🇳 Mongolian">🇲🇳 Mongolian</option>
+                        <option value="🇲🇦 Moroccan">🇲🇦 Moroccan</option>
+                        <option value="🇲🇿 Mozambican">🇲🇿 Mozambican</option>
+                        <option value="🇳🇵 Nepali">🇳🇵 Nepali</option>
+                        <option value="🇳🇿 New Zealander">🇳🇿 New Zealander</option>
+                        <option value="🇳🇮 Nicaraguan">🇳🇮 Nicaraguan</option>
+                        <option value="🇳🇬 Nigerian">🇳🇬 Nigerian</option>
+                        <option value="🇳🇴 Norwegian">🇳🇴 Norwegian</option>
+                        <option value="🇵🇰 Pakistani">🇵🇰 Pakistani</option>
+                        <option value="🇵🇦 Panamanian">🇵🇦 Panamanian</option>
+                        <option value="🇵🇾 Paraguayan">🇵🇾 Paraguayan</option>
+                        <option value="🇵🇪 Peruvian">🇵🇪 Peruvian</option>
+                        <option value="🇵🇭 Filipino">🇵🇭 Filipino</option>
+                        <option value="🇵🇱 Polish">🇵🇱 Polish</option>
+                        <option value="🇵🇹 Portuguese">🇵🇹 Portuguese</option>
+                        <option value="🇶🇦 Qatari">🇶🇦 Qatari</option>
+                        <option value="🇷🇴 Romanian">🇷🇴 Romanian</option>
+                        <option value="🇷🇺 Russian">🇷🇺 Russian</option>
+                        <option value="🇸🇦 Saudi">🇸🇦 Saudi</option>
+                        <option value="🇸🇳 Senegalese">🇸🇳 Senegalese</option>
+                        <option value="🇷🇸 Serbian">🇷🇸 Serbian</option>
+                        <option value="🇸🇬 Singaporean">🇸🇬 Singaporean</option>
+                        <option value="🇸🇰 Slovak">🇸🇰 Slovak</option>
+                        <option value="🇸🇮 Slovenian">🇸🇮 Slovenian</option>
+                        <option value="🇿🇦 South African">🇿🇦 South African</option>
+                        <option value="🇰🇷 South Korean">🇰🇷 South Korean</option>
+                        <option value="🇪🇸 Spanish">🇪🇸 Spanish</option>
+                        <option value="🇱🇰 Sri Lankan">🇱🇰 Sri Lankan</option>
+                        <option value="🇸🇩 Sudanese">🇸🇩 Sudanese</option>
+                        <option value="🇸🇪 Swedish">🇸🇪 Swedish</option>
+                        <option value="🇨🇭 Swiss">🇨🇭 Swiss</option>
+                        <option value="🇸🇾 Syrian">🇸🇾 Syrian</option>
+                        <option value="🇹🇼 Taiwanese">🇹🇼 Taiwanese</option>
+                        <option value="🇹🇿 Tanzanian">🇹🇿 Tanzanian</option>
+                        <option value="🇹🇭 Thai">🇹🇭 Thai</option>
+                        <option value="🇹🇳 Tunisian">🇹🇳 Tunisian</option>
+                        <option value="🇹🇷 Turkish">🇹🇷 Turkish</option>
+                        <option value="🇺🇬 Ugandan">🇺🇬 Ugandan</option>
+                        <option value="🇺🇦 Ukrainian">🇺🇦 Ukrainian</option>
+                        <option value="🇦🇪 Emirati">🇦🇪 Emirati</option>
+                        <option value="🇺🇾 Uruguayan">🇺🇾 Uruguayan</option>
+                        <option value="🇺🇿 Uzbek">🇺🇿 Uzbek</option>
+                        <option value="🇻🇪 Venezuelan">🇻🇪 Venezuelan</option>
+                        <option value="🇻🇳 Vietnamese">🇻🇳 Vietnamese</option>
+                        <option value="🇾🇪 Yemeni">🇾🇪 Yemeni</option>
+                        <option value="🇿🇲 Zambian">🇿🇲 Zambian</option>
+                        <option value="🇿🇼 Zimbabwean">🇿🇼 Zimbabwean</option>
+                    </select>
+
                 </div>
+                
                 <div className="mb-4">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="priceRange">
                         Price Range
@@ -327,6 +503,31 @@ const Profile = () => {
                     </button>
                 </div>
             </form>
+
+
+            {/*---------------------------------- Pictures ------------ ------------------------------------------*/}
+
+
+            <div className="p-4 mb-5">
+                <div className="grid grid-cols-4 gap-4 ">
+                    {pictures.map((image, index) => (
+                        <div
+                            key={index}
+                            className="relative cursor-pointer border-2 border-gray-300 rounded-lg overflow-hidden hover:opacity-75"
+                            onClick={() => handleImageChange(index)}
+                        >
+                            <img src={image} alt="Selected" className="w-full h-auto" />
+                        </div>
+                    ))}
+                </div>
+                <button
+                    onClick={handleUpdatePictures}
+                    className="mt-4 bg-gray-700 text-white px-4 py-2 w-full rounded hover:bg-gray-900"
+                >
+                    Update Pictures
+                </button>
+            </div>
+
 
 
             {/*---------------------------------- Bank Account Information ------------------------------------------*/}

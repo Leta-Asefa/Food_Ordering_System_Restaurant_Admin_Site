@@ -120,7 +120,7 @@ const All = () => {
             try {
                 setLoadingActiveDeliveryPeople(true)
 
-                const response = await axios.get(`http://localhost:4000/gps/get_nearby_locations/${authUser.location.coordinates[0]}/${authUser.location.coordinates[1]}`, { withCredentials: true })
+                const response = await axios.get(`http://localhost:4000/gps/get_nearby_locations/${authUser.location.coordinates[1]}/${authUser.location.coordinates[0]}`, { withCredentials: true })
 
                 console.log("FTW ", response.data)
 

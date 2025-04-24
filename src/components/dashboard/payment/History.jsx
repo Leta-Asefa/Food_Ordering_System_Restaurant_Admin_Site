@@ -130,9 +130,9 @@ const History = ({ }) => {
         <tbody>
           {filteredData.map((payment) => (
             <tr key={payment.orderId}>
-              <td className="border px-2 py-1">{payment.orderId._id}</td>
-              <td className="border px-2 py-1">{payment.userId.username}</td>
-              <td className="border px-2 py-1">{payment.userId.phoneNumber}</td>
+              <td className="border px-2 py-1">{payment.orderId?._id}</td>
+              <td className="border px-2 py-1">{payment.userId?.username}</td>
+              <td className="border px-2 py-1">{payment.userId?.phoneNumber}</td>
               <td className="border px-2 py-1">{payment.amount}</td>
               <td className="border px-2 py-1">{payment.paymentMethod}</td>
               <td className="border px-2 py-1">{payment.status}</td>

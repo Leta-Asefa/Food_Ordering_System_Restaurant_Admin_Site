@@ -1,20 +1,12 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { useAuthUserContext } from '../../contexts/AuthUserContext';
-import { FaHome } from 'react-icons/fa';
-import { BiLogOut, BiMenu } from 'react-icons/bi';
-import { CgMenuCake, CgProfile } from 'react-icons/cg';
-import { MdHomeFilled, MdMenuBook, MdMenuOpen, MdPayments } from 'react-icons/md';
-import { GrHome, GrHomeOption, GrLogout, GrOrderedList } from 'react-icons/gr';
+import { CgProfile } from 'react-icons/cg';
+import { MdMenuBook, MdPayments } from 'react-icons/md';
+import { GrOrderedList } from 'react-icons/gr';
 import { TbHomeFilled } from 'react-icons/tb';
-import { SiBillboard } from 'react-icons/si';
-import { PiFlagBannerFill, PiFlagBannerFoldFill } from 'react-icons/pi';
 import { GiKnightBanner } from 'react-icons/gi';
-import { GoGraph, GoReport } from 'react-icons/go';
-import { AiFillInsurance } from 'react-icons/ai';
-import { FcStatistics } from 'react-icons/fc';
-import { BsFileBarGraph } from 'react-icons/bs';
-import { ImProfile } from 'react-icons/im';
+import { GoGraph } from 'react-icons/go';
 import { CiDeliveryTruck } from 'react-icons/ci';
 import { RiLogoutBoxFill } from 'react-icons/ri';
 

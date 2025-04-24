@@ -7,7 +7,7 @@ const Payment = () => {
 
        const statuses=[
             { to: '/payment/history', label: 'History', icon: <FaHistory /> },
-            { to: '/payment/refund', label: 'Refund', icon: <FaMoneyBill /> },
+            { to: '/payment/refund', label: 'Refund Requests', icon: <FaMoneyBill /> },
             { to: '/payment/subscription', label: 'Subscription', icon: <MdPayment /> },
         ]
 

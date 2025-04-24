@@ -119,10 +119,11 @@ const Processing = () => {
 
             try {
                 setLoadingActiveDeliveryPeople(true)
+                console.log("location ")
 
-                const response = await axios.get(`http://localhost:4000/gps/get_nearby_locations/${authUser.location.coordinates[0]}/${authUser.location.coordinates[1]}`, { withCredentials: true })
+                const response = await axios.get(`http://localhost:4000/gps/get_nearby_locations/${authUser.location.coordinates[1]}/${authUser.location.coordinates[0]}`, { withCredentials: true })
 
-                console.log("FTW ", response.data)
+                console.log("FTW ", response.data, "location ",authUser.location.coordinates)
 
                 let ours = []
                 let theirs = []
