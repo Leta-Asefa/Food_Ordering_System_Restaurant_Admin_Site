@@ -15,11 +15,12 @@ const Profile = () => {
         _id: ''
     });
     const [isUpdating, setIsUpdating] = useState(false)
-    const { authUser } = useAuthUserContext()
-    const [bankName, setBankName] = useState('Commercial Bank of Ethiopia (CBE)')
+    const { authUser, setAuthUser } = useAuthUserContext();
+    const [bankName, setBankName] = useState('Select Bank')
     const [bankAccountName, setBankAccountName] = useState('')
     const [bankAccountNumber, setBankAccountNumber] = useState('')
-    const [pictures, setPictures] = useState(authUser.pictures)
+    const [pictures, setPictures] = useState(() => (authUser.pictures && authUser.pictures.length > 0 ? [...authUser.pictures] : []));
+    const [isUpdatingPictures, setIsUpdatingPictures] = useState(false)
 
     const CLOUDINARY_URL = 'https://api.cloudinary.com/v1_1/dpavrc7wd/image/upload';
     const CLOUDINARY_UPLOAD_PRESET = 'ml_default';
@@ -58,6 +59,13 @@ const Profile = () => {
         getProfile()
 
     }, [])
+
+    useEffect(() => {
+        // If authUser.pictures changes (e.g., after login), update pictures state
+        if (authUser.pictures && authUser.pictures.length > 0) {
+            setPictures([...authUser.pictures]);
+        }
+    }, [authUser.pictures]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -114,44 +122,37 @@ const Profile = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setIsUpdating(true)
+        setIsUpdating(true);
         try {
-
-            const response = await axios.put(`http://localhost:4000/restaurant/update/${authUser.contact}`, formData, {
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                withCredentials: true,
-            });
-
+            const response = await axios.put(
+                `http://localhost:4000/restaurant/update/${authUser.contact}`,
+                formData,
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    withCredentials: true,
+                }
+            );
+            // Merge updated fields into formData (simulate backend update)
+            setFormData(prev => ({ ...prev, ...formData }));
+            // Optionally show a success message/modal here
         } catch (error) {
-            console.log(error)
-        }
-
-        if (response.statusText === 'OK') {
-
-            const { _id, name, location, opened, image, cuisine, priceRange, address, contact } = response.data;
-
-            // Set the formData state with the fetched data
-            setFormData({
-                name: name || '',
-                location: location || { type: 'Point', coordinates: [] },
-                opened: opened || false,
-                image: image || '',  // keep the image if provided by the response
-                cuisine: cuisine || '',
-                priceRange: priceRange || '',
-                address: address || '',
-                contact: contact || '',
-                _id
-            });
-
-            setIsUpdating(false)
+            console.log(error);
+        } finally {
+            setIsUpdating(false);
         }
     };
 
     const updateBankInformation = async () => {
-
+        // Validation: ensure all fields are filled
+        if (!bankName || !bankAccountName || !bankAccountNumber) {
+            alert('Please fill in all bank information fields.');
+            return;
+        }
         setIsUpdating(true)
+        // Debug: log the payload to ensure correct values are sent
+        console.log('Updating bank info with:', { bankName, bankAccountName, bankAccountNumber });
         try {
 
             const response = await axios.put(`http://localhost:4000/restaurant/update/bankinfo/${authUser.contact}`,
@@ -198,7 +199,7 @@ const Profile = () => {
                     const data = await response.json();
                     if (data.secure_url) {
                         setPictures((prevImages) => {
-                            const updatedImages = [...prevImages];
+                            const updatedImages = [...(prevImages || Array(6).fill(undefined))];
                             updatedImages[index] = data.secure_url;
                             return updatedImages;
                         });
@@ -212,23 +213,22 @@ const Profile = () => {
     };
 
     const handleUpdatePictures = async () => {
+        setIsUpdatingPictures(true);
+        console.log("before updating pictures", pictures)
         try {
-
-            console.log(pictures)
             const response = await fetch(`http://localhost:4000/restaurant/update/${authUser._id}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ pictures, _id: authUser._id }),
             });
-            console.log(response)
-
+            // Update authUser context with new pictures if backend update is successful
             if (response.ok) {
-                console.log("Images successfully updated!");
-            } else {
-                console.error("Failed to update images");
+                setAuthUser({ ...authUser, pictures });
             }
         } catch (error) {
             console.error("Error sending images to backend:", error);
+        } finally {
+            setIsUpdatingPictures(false);
         }
     };
 
@@ -362,8 +362,6 @@ const Profile = () => {
                         <option value="🇳🇱 Dutch">🇳🇱 Dutch</option>
                         <option value="🇪🇨 Ecuadorian">🇪🇨 Ecuadorian</option>
                         <option value="🇪🇬 Egyptian">🇪🇬 Egyptian</option>
-                        <option value="🇸🇻 Salvadoran">🇸🇻 Salvadoran</option>
-                        <option value="🇪🇪 Estonian">🇪🇪 Estonian</option>
                         <option value="🇪🇹 Ethiopian">🇪🇹 Ethiopian</option>
                         <option value="🇫🇮 Finnish">🇫🇮 Finnish</option>
                         <option value="🇫🇷 French">🇫🇷 French</option>
@@ -447,7 +445,7 @@ const Profile = () => {
                     </select>
 
                 </div>
-                
+
                 <div className="mb-4">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="priceRange">
                         Price Range
@@ -509,22 +507,27 @@ const Profile = () => {
 
 
             <div className="p-4 mb-5">
-                <div className="grid grid-cols-4 gap-4 ">
-                    {pictures.map((image, index) => (
+                <div className="grid grid-cols-6 gap-4 ">
+                    {Array.from({ length: 6 }).map((_, index) => (
                         <div
                             key={index}
-                            className="relative cursor-pointer border-2 border-gray-300 rounded-lg overflow-hidden hover:opacity-75"
+                            className="relative cursor-pointer border-2 border-gray-300 rounded-lg overflow-hidden hover:opacity-75 flex items-center justify-center bg-gray-100 min-h-[80px]"
                             onClick={() => handleImageChange(index)}
                         >
-                            <img src={image} alt="Selected" className="w-full h-auto" />
+                            {pictures && pictures[index] ? (
+                                <img src={pictures[index]} alt={`Selected ${index + 1}`} className="w-full h-auto" />
+                            ) : (
+                                <img src="/logoplaceholder.svg" alt="Placeholder" className="w-12 h-12 opacity-60" />
+                            )}
                         </div>
                     ))}
                 </div>
                 <button
                     onClick={handleUpdatePictures}
                     className="mt-4 bg-gray-700 text-white px-4 py-2 w-full rounded hover:bg-gray-900"
+                    disabled={isUpdatingPictures}
                 >
-                    Update Pictures
+                    {isUpdatingPictures ? 'Updating...' : 'Update Pictures'}
                 </button>
             </div>
 
@@ -540,9 +543,13 @@ const Profile = () => {
                 <div className="mb-4">
 
                     <label for="bankName" className='text-gray-700 font-bold text-sm'>Bank Name </label>
-                    <select id="bankName" name="bankName" value={bankName} className='p-1.5' onChange={(e) => setBankName(e.target.value)}>
+                    <select id="bankName" name="bankName" value={bankName} className='p-1.5' onChange={(e) => {
+                        console.log("bank name",e.target.value)
+                        setBankName(e.target.value)
+                    }}>
+                        <option value="">Select Bank Name</option>
                         <option value="Commercial Bank of Ethiopia (CBE)">Commercial Bank of Ethiopia (CBE)</option>
-                        <option value="Processing">Dashen</option>
+                        <option value="Dashen">Dashen</option>
                         <option value="Bank of Abyssinia">Bank of Abyssinia</option>
                         <option value="Abay Bank">Abay Bank</option>
                         <option value="Addis International Bank">Addis International Bank</option>

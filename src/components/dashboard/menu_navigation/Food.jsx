@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import ItemModal from './ItemModal';
 import axios from 'axios';
+import { useAuthUserContext } from '../../../contexts/AuthUserContext';
 
 const Food = () => {
   const [foods, setFoods] = useState([]);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedFood, setSelectedFood] = useState(null);
+  const {authUser}=useAuthUserContext()
 
   useEffect(() => {
     async function get() {
-      const response = await axios.get(`http://localhost:4000/item/food`, {
+      const response = await axios.get(`http://localhost:4000/item/food/${authUser._id}`, {
         headers: {
           'Content-Type': 'application/json',
         },

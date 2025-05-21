@@ -18,17 +18,17 @@ const CreateNew = () => {
     const [imageFile, setImageFile] = useState(null);
     const [loading, setLoading] = useState(false);
     const { authUser } = useAuthUserContext()
-    const [price,setPrice]=useState({})
+    const [price, setPrice] = useState({})
 
     useEffect(() => {
         const fetch = async () => {
             try {
                 const response = await axios.get(`http://localhost:4000/promotion/tier/pricelist`);
-                if (response.data.price) 
+                if (response.data.price)
                     setPrice(response.data.price)
             } catch (error) {
                 console.error('Error fetching promotions tier price list:', error);
-            } 
+            }
         };
 
         fetch();
@@ -70,19 +70,26 @@ const CreateNew = () => {
             return;
         }
 
-        const promotionData = { ...formData, image: uploadedImageUrl,restaurantId:authUser._id };
+        const promotionData = { ...formData, image: uploadedImageUrl, restaurantId: authUser._id };
 
         try {
             const response = await axios.post('http://localhost:4000/promotion/add', promotionData, {
-                headers: { 'Content-Type': 'application/json' },withCredentials:true
+                headers: { 'Content-Type': 'application/json' }, withCredentials: true
             });
             console.log(response)
 
+            if (response.data.message)
+                alert(response.data.message);//if already taken
+
             if (response.status === 201) {
+
                 alert('Promotion added successfully!');
                 setFormData({ restaurantId: '', tier: '', date: '', image: '', title: '', description: '' });
                 setImageFile(null);
+            } else {
+
             }
+
         } catch (error) {
             console.error('Error adding promotion:', error);
             alert('Failed to add promotion.');
@@ -95,7 +102,7 @@ const CreateNew = () => {
         <div className=" bg-white px-6 rounded-lg shadow-lg">
             <h2 className="text-2xl font-bold mb-2 text-center">Add New Promotion</h2>
             <form onSubmit={handleSubmit}>
-               
+
 
                 <div className="mb-4">
                     <label className="block font-medium">Promotion Tier</label>
@@ -127,7 +134,7 @@ const CreateNew = () => {
 
                 <div className="mb-4">
                     <label className="block font-medium">Upload Image</label>
-                    <input type="file" onChange={handleFileChange}  className="w-full px-3 py-2 border rounded-lg" required />
+                    <input type="file" onChange={handleFileChange} className="w-full px-3 py-2 border rounded-lg" required />
                 </div>
 
                 <button type="submit" className="w-full bg-gray-700 text-white py-2 px-4 rounded-lg hover:bg-gray-900 transition" disabled={loading}>

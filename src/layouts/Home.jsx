@@ -6,7 +6,7 @@ const HomeLayout = ({ children }) => {
     
      <div>
             <Navbar />
-            <div className='grid grid-cols-3 h-full'>
+            <div className=' h-full'>
 
                 <div className="bg-gray-200 h-auto col-span-1">
                     {/* <img src='home.jpg' className='w-full h-full' /> */}

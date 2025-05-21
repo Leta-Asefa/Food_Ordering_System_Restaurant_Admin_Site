@@ -196,15 +196,21 @@ const Report = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {filteredData.map((payment) => (
-                        <tr key={payment._id}>
-                            <td className="border px-4 py-2">{payment.orderId._id}</td>
-                            <td className="border px-4 py-2">{payment.userId.username}</td>
-                            <td className="border px-4 py-2">${payment.amount.toFixed(2)}</td>
-                            <td className="border px-4 py-2">{new Date(payment.paymentDate).toLocaleDateString()}</td>
-                            <td className="border px-4 py-2">{payment.status}</td>
+                    {filteredData.length === 0 ? (
+                        <tr>
+                            <td colSpan="5" className="text-center py-4 text-gray-500">No data, no report</td>
                         </tr>
-                    ))}
+                    ) : (
+                        filteredData.map((payment) => (
+                            <tr key={payment._id}>
+                                <td className="border px-4 py-2">{payment.orderId._id}</td>
+                                <td className="border px-4 py-2">{payment.userId.username}</td>
+                                <td className="border px-4 py-2">${payment.amount.toFixed(2)}</td>
+                                <td className="border px-4 py-2">{new Date(payment.paymentDate).toLocaleDateString()}</td>
+                                <td className="border px-4 py-2">{payment.status}</td>
+                            </tr>
+                        ))
+                    )}
                 </tbody>
             </table>
         </div>

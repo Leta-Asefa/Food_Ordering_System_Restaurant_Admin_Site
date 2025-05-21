@@ -34,6 +34,7 @@ import CreateNew from './components/dashboard/promotion/CreateNew';
 import PromotionList from './components/dashboard/promotion/PromotionList';
 import UnderApplication from './components/dashboard/promotion/UnderApplication';
 import Processing from './components/dashboard/order_statuses/Processing';
+import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
 
@@ -51,7 +52,7 @@ function App() {
         </Route>
 
 
-        <Route element={<DashboardLayout />}>
+        <Route element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
 
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/orders" element={<Order />} />

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import ItemModal from './ItemModal';
 import axios from 'axios';
+import { useAuthUserContext } from '../../../contexts/AuthUserContext';
 
 
 //notice it is totally copied from Food.jsx , i didn't change the variables name to fit drink
@@ -9,10 +10,11 @@ const Drink = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedFood, setSelectedFood] = useState(null);
-
+  const { authUser } = useAuthUserContext()
+  
   useEffect(() => {
     async function get() {
-      const response = await axios.get(`http://localhost:4000/item/drink`, {
+      const response = await axios.get(`http://localhost:4000/item/drink/${authUser._id}`, {
         headers: {
           'Content-Type': 'application/json',
         },
@@ -50,7 +52,7 @@ const Drink = () => {
           className="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300 cursor-pointer"
           onClick={() => handleOpenModal(food)}
         >
-       <img
+          <img
             src={food.image}
             alt={food.name}
             className="w-full h-24 object-cover"

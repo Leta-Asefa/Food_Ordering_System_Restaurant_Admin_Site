@@ -30,10 +30,11 @@ const History = ({ }) => {
   }, [])
 
 
-  const filteredData = data.filter((payment) => {
+  // Only filter if data is not empty
+  const filteredData = data && data.length > 0 ? data.filter((payment) => {
     const paymentDate = new Date(payment.paymentDate).setHours(0, 0, 0, 0);
-  const start = startDate ? new Date(startDate).setHours(0, 0, 0, 0) : null;
-  const end = endDate ? new Date(endDate).setHours(23, 59, 59, 999) : null;
+    const start = startDate ? new Date(startDate).setHours(0, 0, 0, 0) : null;
+    const end = endDate ? new Date(endDate).setHours(23, 59, 59, 999) : null;
 
     return (
       (filterStatus ? payment.status === filterStatus : true) &&
@@ -43,7 +44,7 @@ const History = ({ }) => {
       (!start || paymentDate >= start) &&
       (!end || paymentDate <= end)
     );
-  });
+  }) : [];
 
 
   return (
@@ -128,17 +129,23 @@ const History = ({ }) => {
           </tr>
         </thead>
         <tbody>
-          {filteredData.map((payment) => (
-            <tr key={payment.orderId}>
-              <td className="border px-2 py-1">{payment.orderId?._id}</td>
-              <td className="border px-2 py-1">{payment.userId?.username}</td>
-              <td className="border px-2 py-1">{payment.userId?.phoneNumber}</td>
-              <td className="border px-2 py-1">{payment.amount}</td>
-              <td className="border px-2 py-1">{payment.paymentMethod}</td>
-              <td className="border px-2 py-1">{payment.status}</td>
-              <td className="border px-2 py-1">{new Date(payment.paymentDate).toLocaleString()}</td>
+          {filteredData.length === 0 ? (
+            <tr>
+              <td colSpan="7" className="text-center py-4 text-gray-500">no history</td>
             </tr>
-          ))}
+          ) : (
+            filteredData.map((payment) => (
+              <tr key={payment.orderId}>
+                <td className="border px-2 py-1">{payment.orderId?._id}</td>
+                <td className="border px-2 py-1">{payment.userId?.username}</td>
+                <td className="border px-2 py-1">{payment.userId?.phoneNumber}</td>
+                <td className="border px-2 py-1">{payment.amount}</td>
+                <td className="border px-2 py-1">{payment.paymentMethod}</td>
+                <td className="border px-2 py-1">{payment.status}</td>
+                <td className="border px-2 py-1">{new Date(payment.paymentDate).toLocaleString()}</td>
+              </tr>
+            ))
+          )}
         </tbody>
       </table>
     </div>
