@@ -35,7 +35,6 @@ const DisplayOrders = ({ order, ourDeliveryPersonList, theirOwnDeliveryPersonLis
             console.log("offer", response)
 
             if (response.data.message) {
-                setSelectedDeliveryPerson(person)
                 alert(`Delivery offer is sent to ${person.username}. if he/she declines or not answer in 45 seconds , we will notify you to change another person !`)
             }
 

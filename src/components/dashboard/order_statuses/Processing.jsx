@@ -129,7 +129,7 @@ const Processing = () => {
                 let theirs = []
 
                 response.data.nearbyDeliveryPeople.forEach(deliveryPerson => {
-                    if (deliveryPerson.employer === authUser.name)
+                    if (deliveryPerson.employer === authUser._id)
                         theirs.push(deliveryPerson);
                     else if (deliveryPerson.employer === 'us')
                         ours.push(deliveryPerson);
@@ -176,7 +176,6 @@ const Processing = () => {
                         updateActiveDeliveryPeople={updateActiveDeliveryPeople}
                         setUpdateActiveDeliveryPeople={setUpdateActiveDeliveryPeople}
                         loadingActiveDeliveryPeople={loadingActiveDeliveryPeople}
-
                     />
                 ))}
             </div>

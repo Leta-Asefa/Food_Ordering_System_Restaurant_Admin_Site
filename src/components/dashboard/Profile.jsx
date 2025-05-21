@@ -235,6 +235,7 @@ const Profile = () => {
     return (
         <div className="w-full mx-auto  py-0 px-6  rounded-lg shadow-lg">
             <h2 className="text-2xl font-bold w-96 mx-auto text-center">Restaurant's Profile</h2>
+            <h2 className="text-sm w-96 mx-auto text-center">Restaurant Id : {formData._id}</h2>
             <form onSubmit={handleSubmit}>
 
                 <div className=" w-24 mx-auto ">

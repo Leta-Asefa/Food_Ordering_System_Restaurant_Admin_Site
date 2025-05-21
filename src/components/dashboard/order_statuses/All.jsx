@@ -122,13 +122,13 @@ const All = () => {
 
                 const response = await axios.get(`http://localhost:4000/gps/get_nearby_locations/${authUser.location.coordinates[1]}/${authUser.location.coordinates[0]}`, { withCredentials: true })
 
-                console.log("FTW ", response.data)
+                console.log("FTW ", response.data,"location",authUser.location)
 
                 let ours = []
                 let theirs = []
 
                 response.data.nearbyDeliveryPeople.forEach(deliveryPerson => {
-                    if (deliveryPerson.employer === authUser.name)
+                    if (deliveryPerson.employer === authUser._id)
                         theirs.push(deliveryPerson);
                     else if (deliveryPerson.employer === 'us')
                         ours.push(deliveryPerson);
