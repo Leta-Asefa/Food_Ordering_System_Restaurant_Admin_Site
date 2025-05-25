@@ -11,6 +11,7 @@ const PromotionList = () => {
         const fetchPromotions = async () => {
             try {
                 const response = await axios.get('http://localhost:4000/promotion/get');
+                console.log("Fetched promotions:", response.data);
                 setPromotions(response.data);
             } catch (error) {
                 console.error('Error fetching promotions:', error);
@@ -57,7 +58,7 @@ const PromotionList = () => {
                                     {tiers.map((tier) => (
                                         <td key={tier} className="border p-2 text-center">
                                             {groupedPromotions[date][tier] ? (
-                                                <span className="text-red-500">Booked  <span className='text-xs text-gray-600'>( {groupedPromotions[date][tier].restaurantId.name} )</span></span>
+                                                <span className="text-red-500">Booked  <span className='text-xs text-gray-600'>( {groupedPromotions[date][tier].restaurantId?.name} )</span></span>
                                             ) : (
                                                 <span className="text-green-500">Available</span>
                                             )}

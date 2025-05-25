@@ -16,6 +16,15 @@ const All = () => {
     const [loadingActiveDeliveryPeople,setLoadingActiveDeliveryPeople]=useState(false)
     const socket = useSocketContext()
 
+    // Pagination state
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 3;
+
+    // Calculate paginated orders
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const paginatedOrders = filteredOrders.slice(indexOfFirstItem, indexOfLastItem);
+    const totalPages = Math.ceil(filteredOrders.length / itemsPerPage);
 
     useEffect(() => {
         if (socket) {
@@ -114,42 +123,33 @@ const All = () => {
     }, [])
 
     useEffect(() => {
+        // Only fetch if authUser and location are available
+        if (!authUser || !authUser.location || !authUser.location.coordinates || authUser.location.coordinates.length < 2) return;
 
         async function get() {
-
             try {
-                setLoadingActiveDeliveryPeople(true)
-
-                const response = await axios.get(`http://localhost:4000/gps/get_nearby_locations/${authUser.location.coordinates[1]}/${authUser.location.coordinates[0]}`, { withCredentials: true })
-
-                console.log("FTW ", response.data,"location",authUser.location)
-
-                let ours = []
-                let theirs = []
-
+                setLoadingActiveDeliveryPeople(true);
+                const response = await axios.get(`http://localhost:4000/gps/get_nearby_locations/${authUser.location.coordinates[1]}/${authUser.location.coordinates[0]}`, { withCredentials: true });
+                let ours = [];
+                let theirs = [];
                 response.data.nearbyDeliveryPeople.forEach(deliveryPerson => {
                     if (deliveryPerson.employer === authUser._id)
                         theirs.push(deliveryPerson);
                     else if (deliveryPerson.employer === 'us')
                         ours.push(deliveryPerson);
                 });
-
-
-                setOurDeliveryPersonList(ours)
-                setTheirOwnDeliveryPersonList(theirs)
+                setOurDeliveryPersonList(ours);
+                setTheirOwnDeliveryPersonList(theirs);
             } catch (error) {
                 console.error("Error fetching data:", error);
             } finally {
-                setLoadingActiveDeliveryPeople(false)
+                setLoadingActiveDeliveryPeople(false);
             }
-
         }
-        console.log("refetching")
         get();
-    }, [updateActiveDeliveryPeople]);
+    }, [updateActiveDeliveryPeople, authUser]);
 
-
-
+  
 
     return (
         <div>
@@ -166,19 +166,35 @@ const All = () => {
             </div>
 
             {/* Display Orders */}
-            <div className='bg-white px-5 py-1 rounded-lg overflow-hidden text-xs space-y-2'>
-                {filteredOrders.map(order => (
-                    <DisplayOrders
-                        order={order}
-                        theirOwnDeliveryPersonList={theirOwnDeliveryPersonList}
-                        ourDeliveryPersonList={ourDeliveryPersonList}
-                        updateActiveDeliveryPeople={updateActiveDeliveryPeople}
-                        setUpdateActiveDeliveryPeople={setUpdateActiveDeliveryPeople}
-                        loadingActiveDeliveryPeople={loadingActiveDeliveryPeople}
-
-                    />
-                ))}
+            <div className='bg-white px-5 py-1 rounded-lg overflow-hidden text-xs  space-y-2'>
+                {filteredOrders.length === 0 ? (
+                    <div className="text-center text-gray-400 py-8">No order is found.</div>
+                ) : (
+                    filteredOrders.map(order => (
+                        <DisplayOrders order={order} />
+                    ))
+                )}
             </div>
+            {/* Pagination Controls */}
+            {totalPages > 1 && (
+                <div className="flex justify-center items-center mt-4 space-x-2">
+                    <button
+                        className="px-2 py-1 border rounded disabled:opacity-50"
+                        onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                        disabled={currentPage === 1}
+                    >
+                        Prev
+                    </button>
+                    <span>Page {currentPage} of {totalPages}</span>
+                    <button
+                        className="px-2 py-1 border rounded disabled:opacity-50"
+                        onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                        disabled={currentPage === totalPages}
+                    >
+                        Next
+                    </button>
+                </div>
+            )}
         </div>
     );
 };

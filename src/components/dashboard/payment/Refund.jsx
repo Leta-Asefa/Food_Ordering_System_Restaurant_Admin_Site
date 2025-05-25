@@ -9,6 +9,33 @@ const Refund = () => {
   const [modalContent, setModalContent] = useState("");
   const { authUser } = useAuthUserContext();
 
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
+
+  // Search state
+  const [searchText, setSearchText] = useState('');
+
+  // Filtered refunds with search
+  const filteredRefunds = refunds.filter(refund => {
+    const search = searchText.toLowerCase();
+    const fields = [
+      refund.orderId?._id,
+      refund.userId?.username,
+      refund.userId?.phoneNumber,
+      refund.location,
+      refund.reason,
+      refund.amount?.toString(),
+    ];
+    return fields.some(field => field && field.toString().toLowerCase().includes(search));
+  });
+
+  // Pagination on filtered refunds
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const paginatedRefunds = filteredRefunds.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filteredRefunds.length / itemsPerPage);
+
   useEffect(() => {
     // Replace with your actual endpoint
     axios.get(`http://localhost:4000/payment/refundRequests/restaurant/${authUser._id}`)
@@ -63,7 +90,7 @@ const Refund = () => {
   if (loading) return <p className="text-center text-gray-500">Loading refund requests...</p>;
 
   return (
-    <div className="p-6">
+    <div className="py-2 px-6">
       {/* Modal */}
       {modalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50">
@@ -78,28 +105,51 @@ const Refund = () => {
           </div>
         </div>
       )}
-      <h2 className="text-2xl font-semibold text-gray-800 mb-4">Refund Requests</h2>
+      <h2 className="text-xl font-semibold text-gray-800 mb-2">Refund Requests</h2>
+      <div className="flex items-center mb-4 gap-2">
+        <input
+          type="text"
+          className="border p-2 flex-1"
+          placeholder="Search..."
+          value={searchText}
+          onChange={e => {
+            setSearchText(e.target.value);
+            setCurrentPage(1);
+          }}
+        />
+        <button
+          className="px-3 py-2 bg-gray-200 rounded hover:bg-gray-300 text-sm"
+          onClick={() => {
+            setSearchText('');
+            setCurrentPage(1);
+          }}
+        >
+          Clear Search
+        </button>
+      </div>
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white shadow-md rounded-xl overflow-hidden">
           <thead className="bg-gray-100 text-gray-600 uppercase text-sm leading-normal">
-            <tr>
-              <th className="py-3 px-6 text-left">Order ID</th>
-              <th className="py-3 px-6 text-left">Customer Name</th>
-              <th className="py-3 px-6 text-left">Phone Number</th>
-              <th className="py-3 px-6 text-left">Location</th>
-              <th className="py-3 px-6 text-left">Reason</th>
-              <th className="py-3 px-6 text-center">Actions</th>
+            <tr className='text-sm'>
+              <th className="py-2 px-6 text-left">Order ID</th>
+              <th className="py-2 px-6 text-left">Customer Name</th>
+              <th className="py-2 px-6 text-left">Phone Number</th>
+              <th className="py-2 px-6 text-left">Location</th>
+              <th className="py-2 px-6 text-left">Reason</th>
+              <th className="py-2 px-6 text-left">Requested At</th>
+              <th className="py-2 px-6 text-center">Actions</th>
             </tr>
           </thead>
           <tbody className="text-gray-700 text-sm font-light">
-            {refunds.map((refund) => (
-              <tr key={refund.orderId._id} className="border-b border-gray-200 hover:bg-gray-50 transition">
-                <td className="py-3 px-6">{refund.orderId}</td>
-                <td className="py-3 px-6">{refund.userId.username}</td>
-                <td className="py-3 px-6">{refund.userId.phoneNumber}</td>
-                <td className="py-3 px-6">{refund.location}</td>
-                <td className="py-3 px-6">{refund.reason}</td>
-                <td className="py-3 px-6 text-center flex justify-center gap-2">
+            {paginatedRefunds.map((refund) => (
+              <tr key={refund.orderId._id} className="border-b border-gray-200 hover:bg-gray-50 transition text-sm">
+                <td className="py-1.5 px-6">{refund.orderId}</td>
+                <td className="py-1.5 px-6">{refund.userId.username}</td>
+                <td className="py-1.5 px-6">{refund.userId.phoneNumber}</td>
+                <td className="py-1.5 px-6">{refund.location}</td>
+                <td className="py-1.5 px-6">{refund.reason}</td>
+                <td className="py-1.5 px-6">{refund.createdAt ? new Date(refund.createdAt).toLocaleString() : '-'}</td>
+                <td className="py-1.5 px-6 text-center flex justify-center gap-2">
                   <button
                     onClick={() => handleApprove(refund.orderId, refund._id, refund.amount)}
                     className="bg-green-500 hover:bg-green-600 text-white font-semibold px-4 py-1 rounded-full text-xs shadow-sm"
@@ -115,13 +165,33 @@ const Refund = () => {
                 </td>
               </tr>
             ))}
-            {refunds.length === 0 && (
+            {paginatedRefunds.length === 0 && (
               <tr>
-                <td colSpan="5" className="text-center py-6 text-gray-500">No refund requests found.</td>
+                <td colSpan="7" className="text-center py-6 text-gray-500">No refund requests found.</td>
               </tr>
             )}
           </tbody>
         </table>
+        {/* Pagination Controls */}
+        {totalPages > 1 && (
+          <div className="flex justify-center items-center mt-4 space-x-2">
+            <button
+              className="px-2 py-1 border rounded disabled:opacity-50"
+              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+              disabled={currentPage === 1}
+            >
+              Prev
+            </button>
+            <span>Page {currentPage} of {totalPages}</span>
+            <button
+              className="px-2 py-1 border rounded disabled:opacity-50"
+              onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+              disabled={currentPage === totalPages}
+            >
+              Next
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

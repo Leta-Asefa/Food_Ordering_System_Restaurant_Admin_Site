@@ -24,7 +24,7 @@ const Delivered = () => {
             );
         });
         setFilteredOrders(filtered);
-    }, [searchQuery]); // Will re-run the filter on every search query change
+    }, [searchQuery,orders]); // Will re-run the filter on every search query change
 
 
     useEffect(() => {
@@ -61,11 +61,13 @@ const Delivered = () => {
                 />
             </div>
             <div className='bg-white px-5 py-1 rounded-lg overflow-hidden text-xs  space-y-2'>
-                {
+                {filteredOrders.length === 0 ? (
+                    <div className="text-center text-gray-400 py-8">No order is found.</div>
+                ) : (
                     orders.map(order => {
                         return <DisplayOrders order={order} />
                     })
-                }
+                )}
             </div>
         </div>
     );

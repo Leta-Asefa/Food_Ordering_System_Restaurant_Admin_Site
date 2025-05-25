@@ -3,7 +3,7 @@ import Modal from './DeliveryPersonModal';
 import axios from 'axios';
 import { useAuthUserContext } from '../../../contexts/AuthUserContext';
 
-const DisplayOrders = ({ order, ourDeliveryPersonList, theirOwnDeliveryPersonList, updateActiveDeliveryPeople, setUpdateActiveDeliveryPeople, loadingActiveDeliveryPeople }) => {
+const DisplayOrders = ({ order, ourDeliveryPersonList, theirOwnDeliveryPersonList, updateActiveDeliveryPeople, setUpdateActiveDeliveryPeople, loadingActiveDeliveryPeople, onOrderUpdate }) => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [status, setStatus] = useState(order.status)
@@ -59,8 +59,10 @@ const DisplayOrders = ({ order, ourDeliveryPersonList, theirOwnDeliveryPersonLis
                 withCredentials: true,
             });
             console.log(response)
-            if (response.data.message)
+            if (response.data.message) {
                 setStatus(newStatus)
+                onOrderUpdate(order._id);//to remove the order from the list after status update
+            }
 
         } catch (error) {
             console.error('Error updating status:', error);
@@ -112,18 +114,21 @@ const DisplayOrders = ({ order, ourDeliveryPersonList, theirOwnDeliveryPersonLis
                         <img src={order.deliveryPersonId?.image || '/profile.svg'} className='w-10 h-10 mx-auto rounded-lg' />
                     </div>
                     <div className=''>Order Date : {order.createdAt}</div>
-                    <div className=''>
-                        <label for="status">Status : </label>
-                        <select id="status" name="status" value={status} onChange={(e) => handleStatusChange(e)}>
-                            <option value="Pending">Pending</option>
-                            <option value="Processing">Processing</option>
-                            <option value="Cancelled">Cancelled</option>
-                            <option value="OnTransit">On Transit</option>
-                            <option value="Delivered">Delivered</option>
-                            <option value="Ready For Pickup">Ready For Pickup</option>
-                            <option value="Picked Up">Pickedup</option>
-                        </select>
-                    </div>
+                    {
+                        order.status === 'Processing' && (
+
+                            <div className=''>
+                                <label for="status">Status : </label>
+                                <select id="status" name="status" value={status} onChange={(e) => handleStatusChange(e)}>
+                                    <option value="Pending">Pending</option>
+                                    <option value="Processing">Processing</option>
+                                    <option value="Cancelled">Cancelled</option>
+                                    <option value="OnTransit">On Transit</option>
+                                    <option value="Delivered">Delivered</option>
+                                </select>
+                            </div>
+                        )
+                    }
                 </div>
 
 

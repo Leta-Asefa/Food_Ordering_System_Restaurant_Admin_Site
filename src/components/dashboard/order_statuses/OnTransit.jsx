@@ -25,7 +25,7 @@ const OnTransit = () => {
             );
         });
         setFilteredOrders(filtered);
-    }, [searchQuery]); // Will re-run the filter on every search query change
+    }, [searchQuery, orders]); // Re-run filter when searchQuery or orders change
 
 
     useEffect(() => {
@@ -36,6 +36,7 @@ const OnTransit = () => {
                 },
                 withCredentials: true,
             });
+            console.log("OnTransit Orders: ", response.data)
 
             setOrders(response.data)
 
@@ -45,6 +46,12 @@ const OnTransit = () => {
 
 
     }, [])
+
+    // Remove order from list after status update
+    const handleOrderUpdate = (orderId) => {
+        setOrders(prevOrders => prevOrders.filter(order => order._id !== orderId));
+    };
+    
     return (
         <div>
             {/* Search Input */}
@@ -60,11 +67,13 @@ const OnTransit = () => {
             </div>
 
             <div className='bg-white px-5 py-1 rounded-lg overflow-hidden text-xs  space-y-2'>
-                {
-                    orders.map(order => {
-                        return <DisplayOrders order={order} />
-                    })
-                }
+                {filteredOrders.length === 0 ? (
+                    <div className="text-center text-gray-400 py-8">No order is found.</div>
+                ) : (
+                    filteredOrders.map(order => (
+                        <DisplayOrders order={order} onOrderUpdate={handleOrderUpdate} />
+                    ))
+                )}
             </div>
         </div>
     );

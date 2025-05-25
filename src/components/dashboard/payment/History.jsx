@@ -8,8 +8,12 @@ const History = ({ }) => {
   const [amountRange, setAmountRange] = useState({ min: 0, max: 1000 });
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
-  const [data, setData] = useState([])
-  const { authUser } = useAuthUserContext()
+  const [data, setData] = useState([]);
+  const { authUser } = useAuthUserContext();
+
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 8;
 
   useEffect(() => {
     async function get() {
@@ -19,16 +23,13 @@ const History = ({ }) => {
         },
         withCredentials: true,
       });
-      console.log(response.data)
-      setData(response.data)
-
+      // Discard items where orderId is empty
+      const filtered = response.data.filter(payment => payment.orderId);
+      setData(filtered);
     }
 
-    get()
-
-
-  }, [])
-
+    get();
+  }, []);
 
   // Only filter if data is not empty
   const filteredData = data && data.length > 0 ? data.filter((payment) => {
@@ -46,6 +47,11 @@ const History = ({ }) => {
     );
   }) : [];
 
+  // Calculate paginated data
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const paginatedData = filteredData.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
 
   return (
     <div className="container mx-auto p-1 overflow-x-hidden">
@@ -59,21 +65,9 @@ const History = ({ }) => {
         >
           <option value="">All Statuses</option>
           <option value="Pending">Pending</option>
-          <option value="Completed">Completed</option>
-          <option value="Failed">Failed</option>
+          <option value="Paid">Paid</option>
+          <option value="Cancelled">Cancelled</option>
           <option value="Refunded">Refunded</option>
-        </select>
-
-        <select
-          className="border p-2"
-          value={filterMethod}
-          onChange={(e) => setFilterMethod(e.target.value)}
-        >
-          <option value="">All Methods</option>
-          <option value="Card">Card</option>
-          <option value="UPI">UPI</option>
-          <option value="Cash">Cash</option>
-          <option value="Wallet">Wallet</option>
         </select>
 
         <div className="flex space-x-2">
@@ -81,7 +75,7 @@ const History = ({ }) => {
             type="number"
             placeholder="Min Amount"
             className="border p-2"
-            value={amountRange.min===0?'':amountRange.min}
+            value={amountRange.min === 0 ? '' : amountRange.min}
             onChange={(e) =>
               setAmountRange({ ...amountRange, min: Number(e.target.value) })
             }
@@ -90,7 +84,7 @@ const History = ({ }) => {
             type="number"
             placeholder="Max Amount"
             className="border p-2"
-            value={amountRange.max===1000?'':amountRange.max}
+            value={amountRange.max === 1000 ? '' : amountRange.max}
             onChange={(e) =>
               setAmountRange({ ...amountRange, max: Number(e.target.value) })
             }
@@ -109,11 +103,21 @@ const History = ({ }) => {
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
             />
+            <button
+              className="ml-2 px-3 py-2 bg-gray-200 rounded hover:bg-gray-300 text-sm"
+              onClick={() => {
+                setFilterStatus('');
+                setFilterMethod('');
+                setAmountRange({ min: 0, max: 1000 });
+                setStartDate('');
+                setEndDate('');
+                setCurrentPage(1);
+              }}
+            >
+              Clear All Filters
+            </button>
           </div>
-
-
         </div>
-
       </div>
 
       <table className="min-w-full bg-white border">
@@ -129,12 +133,12 @@ const History = ({ }) => {
           </tr>
         </thead>
         <tbody>
-          {filteredData.length === 0 ? (
+          {paginatedData.length === 0 ? (
             <tr>
               <td colSpan="7" className="text-center py-4 text-gray-500">no history</td>
             </tr>
           ) : (
-            filteredData.map((payment) => (
+            paginatedData.map((payment) => (
               <tr key={payment.orderId}>
                 <td className="border px-2 py-1">{payment.orderId?._id}</td>
                 <td className="border px-2 py-1">{payment.userId?.username}</td>
@@ -148,10 +152,29 @@ const History = ({ }) => {
           )}
         </tbody>
       </table>
+      {/* Pagination Controls */}
+      {totalPages > 1 && (
+        <div className="flex justify-center items-center mt-4 space-x-2">
+          <button
+            className="px-2 py-1 border rounded disabled:opacity-50"
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+          >
+            Prev
+          </button>
+          <span>Page {currentPage} of {totalPages}</span>
+          <button
+            className="px-2 py-1 border rounded disabled:opacity-50"
+            onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+            disabled={currentPage === totalPages}
+          >
+            Next
+          </button>
+        </div>
+      )}
     </div>
   );
 };
-
 
 export default History;
 

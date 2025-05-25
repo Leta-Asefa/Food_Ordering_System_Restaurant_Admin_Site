@@ -25,7 +25,7 @@ const Pending = () => {
             );
         });
         setFilteredOrders(filtered);
-    }, [searchQuery]); // Will re-run the filter on every search query change
+    }, [searchQuery,orders]); // Will re-run the filter on every search query change
 
 
     useEffect(() => {
@@ -46,6 +46,11 @@ const Pending = () => {
 
     }, [])
 
+    // Remove order from list after status update
+    const handleOrderUpdate = (orderId) => {
+        console.log("Order ID to remove: ", orderId);
+        setOrders(prevOrders => prevOrders.filter(order => order._id !== orderId));
+    };
 
     return (
         <div>
@@ -61,11 +66,13 @@ const Pending = () => {
                 />
             </div>
             <div className='bg-white px-5 py-1 rounded-lg overflow-hidden text-xs  space-y-2'>
-                {
-                    orders.map(order => {
-                        return <DisplayOrders order={order} />
-                    })
-                }
+                {filteredOrders.length === 0 ? (
+                    <div className="text-center text-gray-400 py-8">No order is found.</div>
+                ) : (
+                    filteredOrders.map(order => (
+                        <DisplayOrders order={order} onOrderUpdate={handleOrderUpdate} />
+                    ))
+                )}
             </div>
         </div>
     );
