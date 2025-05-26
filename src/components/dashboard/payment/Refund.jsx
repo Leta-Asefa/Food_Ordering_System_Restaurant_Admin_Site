@@ -65,6 +65,7 @@ const Refund = () => {
         } else {
           setModalContent(res.data.message || "No response message");
         }
+        setRefunds(prev => prev.filter(r => r._id !== refundRequestId));
         setModalOpen(true);
       })
       .catch(err => {
@@ -78,6 +79,7 @@ const Refund = () => {
     axios.get(`http://localhost:4000/payment/declineRefundRequest/${refundId}`)
       .then(res => {
         setModalContent(res.data.message || "No response message");
+        setRefunds(prev => prev.filter(r => r._id !== refundId));
         setModalOpen(true);
       })
       .catch(err => {

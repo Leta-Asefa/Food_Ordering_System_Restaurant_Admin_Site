@@ -122,6 +122,12 @@ const Profile = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        // Validate contact number before submitting
+        const contact = formData.contact;
+        if (!/^0[79]\d{8}$/.test(contact)) {
+            alert('Contact number must start with 09 or 07 and be exactly 10 digits.');
+            return;
+        }
         setIsUpdating(true);
         try {
             const response = await axios.put(
@@ -134,11 +140,14 @@ const Profile = () => {
                     withCredentials: true,
                 }
             );
+            console.log("response", response.data)
 
-            if(response.data.message)
-            setFormData(prev => ({ ...prev, ...formData }));
+            if (response.data.message) {
+                setAuthUser(prev => ({ ...prev, ...formData }))
+                setFormData(prev => ({ ...prev, ...formData }));
+            }
 
-            if(response.data.error)
+            if (response.data.error)
                 alert(response.data.error)
 
 
@@ -550,7 +559,7 @@ const Profile = () => {
 
                     <label for="bankName" className='text-gray-700 font-bold text-sm'>Bank Name </label>
                     <select id="bankName" name="bankName" value={bankName} className='p-1.5' onChange={(e) => {
-                        console.log("bank name",e.target.value)
+                        console.log("bank name", e.target.value)
                         setBankName(e.target.value)
                     }}>
                         <option value="">Select Bank Name</option>
