@@ -12,7 +12,7 @@ const DisplayOrders = ({ order, ourDeliveryPersonList, theirOwnDeliveryPersonLis
 
 
     const handleImageClick = () => {
-        setUpdateActiveDeliveryPeople(!updateActiveDeliveryPeople)
+     //   setUpdateActiveDeliveryPeople(!updateActiveDeliveryPeople)
         setIsModalOpen(true);
     };
 
@@ -120,11 +120,8 @@ const DisplayOrders = ({ order, ourDeliveryPersonList, theirOwnDeliveryPersonLis
                             <div className=''>
                                 <label for="status">Status : </label>
                                 <select id="status" name="status" value={status} onChange={(e) => handleStatusChange(e)}>
-                                    <option value="Pending">Pending</option>
-                                    <option value="Processing">Processing</option>
-                                    <option value="Cancelled">Cancelled</option>
                                     <option value="OnTransit">On Transit</option>
-                                    <option value="Delivered">Delivered</option>
+                                    <option value="Cancelled">Cancelled</option>
                                 </select>
                             </div>
                         )

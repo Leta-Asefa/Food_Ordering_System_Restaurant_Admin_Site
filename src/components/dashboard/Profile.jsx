@@ -134,9 +134,14 @@ const Profile = () => {
                     withCredentials: true,
                 }
             );
-            // Merge updated fields into formData (simulate backend update)
+
+            if(response.data.message)
             setFormData(prev => ({ ...prev, ...formData }));
-            // Optionally show a success message/modal here
+
+            if(response.data.error)
+                alert(response.data.error)
+
+
         } catch (error) {
             console.log(error);
         } finally {

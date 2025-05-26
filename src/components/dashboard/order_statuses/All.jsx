@@ -18,7 +18,7 @@ const All = () => {
 
     // Pagination state
     const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 3;
+    const itemsPerPage = 4;
 
     // Calculate paginated orders
     const indexOfLastItem = currentPage * itemsPerPage;
@@ -99,6 +99,7 @@ const All = () => {
             );
         });
         setFilteredOrders(filtered);
+        setCurrentPage(1)
     }, [searchQuery, orders]); // Will re-run the filter on every search query change
 
     useEffect(() => {
@@ -159,7 +160,7 @@ const All = () => {
                 <input
                     type="text"
                     placeholder="Search orders..."
-                    className=" w-96 mx-auto border-b border-gray-400  px-4 py-2 text-sm bg-white"
+                    className=" w-96 mt-2 mx-auto border-b border-gray-400  px-4 py-2 text-sm bg-white"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                 />
@@ -167,10 +168,10 @@ const All = () => {
 
             {/* Display Orders */}
             <div className='bg-white px-5 py-1 rounded-lg overflow-hidden text-xs  space-y-2'>
-                {filteredOrders.length === 0 ? (
+                {paginatedOrders.length === 0 ? (
                     <div className="text-center text-gray-400 py-8">No order is found.</div>
                 ) : (
-                    filteredOrders.map(order => (
+                    paginatedOrders.map(order => (
                         <DisplayOrders order={order} />
                     ))
                 )}

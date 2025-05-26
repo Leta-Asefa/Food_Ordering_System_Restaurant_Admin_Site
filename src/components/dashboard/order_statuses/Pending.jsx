@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import DisplayOrders from './DisplayOrders';
 import axios from 'axios';
 import { useAuthUserContext } from '../../../contexts/AuthUserContext';
+import { useSocketContext } from '../../../contexts/SocketContext';
 
 const Pending = () => {
 
@@ -9,8 +10,14 @@ const Pending = () => {
     const { authUser } = useAuthUserContext()
         const [filteredOrders, setFilteredOrders] = useState(orders);
     const [searchQuery, setSearchQuery] = useState('');
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 3;
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const paginatedOrders = filteredOrders.slice(indexOfFirstItem, indexOfLastItem);
+    const totalPages = Math.ceil(filteredOrders.length / itemsPerPage);
+    const socket = useSocketContext()
 
-    // This will run on search query change and update filtered orders
     useEffect(() => {
         const filtered = orders.filter(order => {
             const searchTerm = searchQuery.toLowerCase();
@@ -25,6 +32,7 @@ const Pending = () => {
             );
         });
         setFilteredOrders(filtered);
+        setCurrentPage(1)
     }, [searchQuery,orders]); // Will re-run the filter on every search query change
 
 
@@ -46,6 +54,34 @@ const Pending = () => {
 
     }, [])
 
+    useEffect(() => {
+        if (socket) {
+
+            socket.on('order_status_update', (data) => {
+                console.log("order_status_update receied", data)
+                // Remove the order with data.orderId from the orders list and rerender
+                setOrders(prevOrders => prevOrders.filter(order => order._id !== data.orderId));
+            });
+
+
+            return () => socket.off('order_status_update')
+        }
+    }, [socket])
+   
+   
+    useEffect(() => {
+        if (socket) {
+
+            socket.on('new_order_added', (order) => {
+                console.log("new order added", order)
+                setOrders(prevOrders => [...prevOrders, order]);     });
+
+
+            return () => socket.off('new_order_added')
+        }
+    }, [socket])
+
+
     // Remove order from list after status update
     const handleOrderUpdate = (orderId) => {
         console.log("Order ID to remove: ", orderId);
@@ -60,20 +96,40 @@ const Pending = () => {
                 <input
                     type="text"
                     placeholder="Search orders..."
-                    className=" w-96 mx-auto border-b border-gray-400  px-4 py-2 text-sm bg-white"
+                    className=" w-96 mt-2 mx-auto border-b border-gray-400  px-4 py-2 text-sm bg-white"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                 />
             </div>
             <div className='bg-white px-5 py-1 rounded-lg overflow-hidden text-xs  space-y-2'>
-                {filteredOrders.length === 0 ? (
+                {paginatedOrders.length === 0 ? (
                     <div className="text-center text-gray-400 py-8">No order is found.</div>
                 ) : (
-                    filteredOrders.map(order => (
+                    paginatedOrders.map(order => (
                         <DisplayOrders order={order} onOrderUpdate={handleOrderUpdate} />
                     ))
                 )}
             </div>
+            {/* Pagination Controls */}
+            {totalPages > 1 && (
+                <div className="flex justify-center items-center mt-4 space-x-2">
+                    <button
+                        className="px-2 py-1 border rounded disabled:opacity-50"
+                        onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                        disabled={currentPage === 1}
+                    >
+                        Prev
+                    </button>
+                    <span>Page {currentPage} of {totalPages}</span>
+                    <button
+                        className="px-2 py-1 border rounded disabled:opacity-50"
+                        onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                        disabled={currentPage === totalPages}
+                    >
+                        Next
+                    </button>
+                </div>
+            )}
         </div>
     );
 };

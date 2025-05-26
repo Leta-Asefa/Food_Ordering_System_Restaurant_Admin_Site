@@ -42,7 +42,7 @@ const Modal = ({ isOpen, onClose, updateDeliveryPerson, ourDeliveryPersonList, t
 
                   {showTheirs && (
                     <div className="pl-4 mt-2">
-                      {theirOwnDeliveryPersonList.map((person) => (
+                      {theirOwnDeliveryPersonList?.map((person) => (
                         <div key={person._id} className="mb-2">
                           <button
                             onClick={() => updateDeliveryPerson(person)}
@@ -74,7 +74,7 @@ const Modal = ({ isOpen, onClose, updateDeliveryPerson, ourDeliveryPersonList, t
 
                   {showOurs && (
                     <ul className="pl-4 mt-2">
-                      {ourDeliveryPersonList.map((person) => (
+                      {ourDeliveryPersonList?.map((person) => (
                         <li key={person._id} className="mb-2">
                           <button
                             onClick={() => updateDeliveryPerson(person)}
