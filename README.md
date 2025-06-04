@@ -1,6 +1,5 @@
 # Restaurant Admin Portal
 
-![Dashboard Preview](/public/1.png)
 
 ## Core Features
 
