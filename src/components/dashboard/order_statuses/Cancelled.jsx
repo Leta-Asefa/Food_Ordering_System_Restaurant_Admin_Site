@@ -40,7 +40,7 @@ const Cancelled = () => {
 
     useEffect(() => {
         async function get() {
-            const response = await axios.get(`http://localhost:4000/order/restaurant/${authUser._id}/status/Cancelled`, {
+            const response = await axios.get(`https://food-ordering-system-backend-xluu.onrender.com/order/restaurant/${authUser._id}/status/Cancelled`, {
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -57,7 +57,7 @@ const Cancelled = () => {
     }, [])
 
     const handleOrderUpdate = async (updatedOrder) => {
-        const response = await axios.put(`http://localhost:4000/order/${updatedOrder._id}`, updatedOrder, {
+        const response = await axios.put(`https://food-ordering-system-backend-xluu.onrender.com/order/${updatedOrder._id}`, updatedOrder, {
             headers: {
                 'Content-Type': 'application/json',
             },

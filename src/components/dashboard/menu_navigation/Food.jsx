@@ -12,7 +12,7 @@ const Food = () => {
 
   useEffect(() => {
     async function get() {
-      const response = await axios.get(`http://localhost:4000/item/food/${authUser._id}`, {
+      const response = await axios.get(`https://food-ordering-system-backend-xluu.onrender.com/item/food/${authUser._id}`, {
         headers: {
           'Content-Type': 'application/json',
         },

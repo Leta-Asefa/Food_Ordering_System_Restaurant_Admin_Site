@@ -18,7 +18,7 @@ const UnderApplication = ({ restaurantId }) => {
     useEffect(() => {
         const fetch = async () => {
             try {
-                const response = await axios.get(`http://localhost:4000/promotion/tier/pricelist`);
+                const response = await axios.get(`https://food-ordering-system-backend-xluu.onrender.com/promotion/tier/pricelist`);
                 if (response.data.price)
                     setPrice(response.data.price)
             } catch (error) {
@@ -32,7 +32,7 @@ const UnderApplication = ({ restaurantId }) => {
     useEffect(() => {
         const fetchPromotions = async () => {
             try {
-                const response = await axios.get(`http://localhost:4000/promotion/${authUser._id}`);
+                const response = await axios.get(`https://food-ordering-system-backend-xluu.onrender.com/promotion/${authUser._id}`);
                 setPromotions(response.data.sort((a, b) => new Date(b.date) - new Date(a.date))); // Sort latest first
             } catch (error) {
                 console.error('Error fetching promotions:', error);
@@ -49,7 +49,7 @@ const UnderApplication = ({ restaurantId }) => {
         const paymentInfo = { phoneNumber: authUser.contact, amount: amount, firstName: authUser.name, promotionId };
 
         try {
-            const response = await axios.post('http://localhost:4000/payment/test', paymentInfo, {
+            const response = await axios.post('https://food-ordering-system-backend-xluu.onrender.com/payment/test', paymentInfo, {
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -105,7 +105,7 @@ const UnderApplication = ({ restaurantId }) => {
 
             console.log(updatedPromo)
 
-            const response = await axios.put(`http://localhost:4000/promotion/${promotionId}`, updatedPromo, {
+            const response = await axios.put(`https://food-ordering-system-backend-xluu.onrender.com/promotion/${promotionId}`, updatedPromo, {
                 headers: {
                     'Content-Type': 'application/json',
                 },

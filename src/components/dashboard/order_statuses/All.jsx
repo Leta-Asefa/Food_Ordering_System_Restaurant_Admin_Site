@@ -104,7 +104,7 @@ const All = () => {
 
     useEffect(() => {
         async function get() {
-            const response = await axios.get(`http://localhost:4000/order/restaurant/${authUser._id}`, {
+            const response = await axios.get(`https://food-ordering-system-backend-xluu.onrender.com/order/restaurant/${authUser._id}`, {
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -130,7 +130,7 @@ const All = () => {
         async function get() {
             try {
                 setLoadingActiveDeliveryPeople(true);
-                const response = await axios.get(`http://localhost:4000/gps/get_nearby_locations/${authUser.location.coordinates[1]}/${authUser.location.coordinates[0]}`, { withCredentials: true });
+                const response = await axios.get(`https://food-ordering-system-backend-xluu.onrender.com/gps/get_nearby_locations/${authUser.location.coordinates[1]}/${authUser.location.coordinates[0]}`, { withCredentials: true });
                 let ours = [];
                 let theirs = [];
                 response.data.nearbyDeliveryPeople.forEach(deliveryPerson => {

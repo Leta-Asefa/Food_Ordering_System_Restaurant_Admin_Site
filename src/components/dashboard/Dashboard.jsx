@@ -10,7 +10,7 @@ const Dashboard = () => {
 
   const fetchSummary = async () => {
     try {
-      const response = await axios.get(`http://localhost:4000/restaurant/summary/${authUser._id}/${days}`);
+      const response = await axios.get(`https://food-ordering-system-backend-xluu.onrender.com/restaurant/summary/${authUser._id}/${days}`);
       setSummary(response.data);
     } catch (error) {
       console.error('Failed to fetch dashboard summary', error);

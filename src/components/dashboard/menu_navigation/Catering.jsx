@@ -11,7 +11,7 @@ const Catering = () => {
 const {authUser}=useAuthUserContext()
   useEffect(() => {
     async function get() {
-      const response = await axios.get(`http://localhost:4000/item/catering/${authUser._id}`, {
+      const response = await axios.get(`https://food-ordering-system-backend-xluu.onrender.com/item/catering/${authUser._id}`, {
         headers: {
           'Content-Type': 'application/json',
         },

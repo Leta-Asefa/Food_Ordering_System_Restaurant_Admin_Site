@@ -12,7 +12,7 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await axios.post('http://localhost:4000/restaurant/login', { phoneNumber, password }, {
+    const response = await axios.post('https://food-ordering-system-backend-xluu.onrender.com/restaurant/login', { phoneNumber, password }, {
       headers: {
         'Content-Type': 'application/json',
       },

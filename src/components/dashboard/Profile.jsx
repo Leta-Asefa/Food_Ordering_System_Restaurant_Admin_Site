@@ -28,7 +28,7 @@ const Profile = () => {
     useEffect(() => {
         async function getProfile() {
 
-            const response = await axios.get(`http://localhost:4000/restaurant/${authUser.contact}`, {
+            const response = await axios.get(`https://food-ordering-system-backend-xluu.onrender.com/restaurant/${authUser.contact}`, {
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -75,12 +75,26 @@ const Profile = () => {
         });
     };
 
-    const handleCheckboxChange = (e) => {
+    const handleCheckboxChange = async (e) => {
         const { name, checked } = e.target;
         setFormData({
             ...formData,
             [name]: checked,
         });
+        if (name === 'opened') {
+            try {
+                await axios.put(
+                    `https://food-ordering-system-backend-xluu.onrender.com/restaurant/update/${authUser.contact}`,
+                    { ...formData, opened: checked },
+                    {
+                        headers: { 'Content-Type': 'application/json' },
+                        withCredentials: true,
+                    }
+                );
+            } catch (error) {
+                console.log('Failed to update open status.')
+            }
+        }
     };
 
     const handleProfilePictureChange = async (e) => {
@@ -131,7 +145,7 @@ const Profile = () => {
         setIsUpdating(true);
         try {
             const response = await axios.put(
-                `http://localhost:4000/restaurant/update/${authUser.contact}`,
+                `https://food-ordering-system-backend-xluu.onrender.com/restaurant/update/${authUser.contact}`,
                 formData,
                 {
                     headers: {
@@ -169,7 +183,7 @@ const Profile = () => {
         console.log('Updating bank info with:', { bankName, bankAccountName, bankAccountNumber });
         try {
 
-            const response = await axios.put(`http://localhost:4000/restaurant/update/bankinfo/${authUser.contact}`,
+            const response = await axios.put(`https://food-ordering-system-backend-xluu.onrender.com/restaurant/update/bankinfo/${authUser.contact}`,
                 { bankName, bankAccountName, bankAccountNumber }
                 , {
                     headers: {
@@ -230,7 +244,7 @@ const Profile = () => {
         setIsUpdatingPictures(true);
         console.log("before updating pictures", pictures)
         try {
-            const response = await fetch(`http://localhost:4000/restaurant/update/${authUser._id}`, {
+            const response = await fetch(`https://food-ordering-system-backend-xluu.onrender.com/restaurant/update/${authUser._id}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ pictures, _id: authUser._id }),

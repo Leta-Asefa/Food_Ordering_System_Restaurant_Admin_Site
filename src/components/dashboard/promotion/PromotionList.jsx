@@ -10,7 +10,7 @@ const PromotionList = () => {
     useEffect(() => {
         const fetchPromotions = async () => {
             try {
-                const response = await axios.get('http://localhost:4000/promotion/get');
+                const response = await axios.get('https://food-ordering-system-backend-xluu.onrender.com/promotion/get');
                 console.log("Fetched promotions:", response.data);
                 setPromotions(response.data);
             } catch (error) {

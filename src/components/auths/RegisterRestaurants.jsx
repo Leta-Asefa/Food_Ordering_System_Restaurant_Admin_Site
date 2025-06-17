@@ -45,7 +45,7 @@ const RegisterRestaurants = () => {
     }
 
     const response = await axios.post(
-      'http://localhost:4000/restaurant/add',
+      'https://food-ordering-system-backend-xluu.onrender.com/restaurant/add',
       { name,contact, address, licenseImage, password },
       {
         headers: {

@@ -17,7 +17,7 @@ const History = ({ }) => {
 
   useEffect(() => {
     async function get() {
-      const response = await axios.get(`http://localhost:4000/payment/restaurant/${authUser._id}`, {
+      const response = await axios.get(`https://food-ordering-system-backend-xluu.onrender.com/payment/restaurant/${authUser._id}`, {
         headers: {
           'Content-Type': 'application/json',
         },

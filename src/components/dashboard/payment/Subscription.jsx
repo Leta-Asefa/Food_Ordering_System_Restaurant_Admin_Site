@@ -11,9 +11,10 @@ const Subscription = () => {
     useEffect(() => {
         async function fetchSubscription() {
             try {
-                const res = await axios.get(`http://localhost:4000/subscription/restaurant/${authUser._id}`);
+                const res = await axios.get(`https://food-ordering-system-backend-xluu.onrender.com/subscription/restaurant/${authUser._id}`);
                 setSubscription(res.data);
                 setLoading(false);
+                console.log("Subscription",res.data)
             } catch (err) {
                 setError('Failed to fetch subscription');
                 setLoading(false);
@@ -24,7 +25,7 @@ const Subscription = () => {
 
     const handlePay = async () => {
         try {
-            const response = await axios.post(`http://localhost:4000/subscription/pay/${subscription._id}`,
+            const response = await axios.post(`https://food-ordering-system-backend-xluu.onrender.com/subscription/pay/${subscription._id}`,
                 { phoneNumber: authUser.contact, name: authUser.name, restaurantId: authUser._id },
                 { headers: { 'Content-Type': 'application/json' }, withCredentials: true });
 

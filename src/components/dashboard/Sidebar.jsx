@@ -17,7 +17,7 @@ const Sidebar = () => {
 
     const handleLogout = async () => {
         try {
-            await axios.get('http://localhost:4000/restaurant/logout', { withCredentials: true });
+            await axios.get('https://food-ordering-system-backend-xluu.onrender.com/restaurant/logout', { withCredentials: true });
             // Optionally clear local storage or context here
             console.log('User logged out');
         } catch (error) {

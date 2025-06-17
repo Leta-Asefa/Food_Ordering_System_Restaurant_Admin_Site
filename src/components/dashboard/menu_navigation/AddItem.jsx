@@ -75,7 +75,7 @@ const AddItem = () => {
         e.preventDefault();
         setIsUpdating(true)
 
-        const response = await axios.post(`http://localhost:4000/item/add`, { ...formData, restaurantId: authUser._id }, {
+        const response = await axios.post(`https://food-ordering-system-backend-xluu.onrender.com/item/add`, { ...formData, restaurantId: authUser._id }, {
             headers: {
                 'Content-Type': 'application/json',
             },

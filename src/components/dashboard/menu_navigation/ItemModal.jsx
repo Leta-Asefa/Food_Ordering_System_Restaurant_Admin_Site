@@ -37,7 +37,7 @@ const ItemModal = ({ isOpen, onClose, onUpdate, selectedFood }) => {
   const handleUpdate = async () => {
 
     try {
-      const response = await axios.put(`http://localhost:4000/item/${formData._id}`, formData, {
+      const response = await axios.put(`https://food-ordering-system-backend-xluu.onrender.com/item/${formData._id}`, formData, {
         headers: {
           'Content-Type': 'application/json',
         },

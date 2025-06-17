@@ -39,7 +39,7 @@ const Delivered = () => {
 
     useEffect(() => {
         async function get() {
-            const response = await axios.get(`http://localhost:4000/order/restaurant/${authUser._id}/status/Delivered`, {
+            const response = await axios.get(`https://food-ordering-system-backend-xluu.onrender.com/order/restaurant/${authUser._id}/status/Delivered`, {
                 headers: {
                     'Content-Type': 'application/json',
                 },

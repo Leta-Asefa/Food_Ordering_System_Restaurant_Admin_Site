@@ -16,7 +16,7 @@ const Report = () => {
         async function fetchData() {
             const start = formatTheDate(startDate ? startDate : getCurrentDateForInput(), 's');
             const end = formatTheDate(endDate ? endDate : getCurrentDateForInput(), 'e');
-            const response = await axios.get(`http://localhost:4000/payment/restaurant/${authUser._id}/${start}/${end}`, {
+            const response = await axios.get(`https://food-ordering-system-backend-xluu.onrender.com/payment/restaurant/${authUser._id}/${start}/${end}`, {
                 headers: { 'Content-Type': 'application/json' },
                 withCredentials: true,
             });

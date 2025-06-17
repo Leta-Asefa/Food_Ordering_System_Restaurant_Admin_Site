@@ -23,7 +23,7 @@ const CreateNew = () => {
     useEffect(() => {
         const fetch = async () => {
             try {
-                const response = await axios.get(`http://localhost:4000/promotion/tier/pricelist`);
+                const response = await axios.get(`https://food-ordering-system-backend-xluu.onrender.com/promotion/tier/pricelist`);
                 if (response.data.price)
                     setPrice(response.data.price)
             } catch (error) {
@@ -73,7 +73,7 @@ const CreateNew = () => {
         const promotionData = { ...formData, image: uploadedImageUrl, restaurantId: authUser._id };
 
         try {
-            const response = await axios.post('http://localhost:4000/promotion/add', promotionData, {
+            const response = await axios.post('https://food-ordering-system-backend-xluu.onrender.com/promotion/add', promotionData, {
                 headers: { 'Content-Type': 'application/json' }, withCredentials: true
             });
             console.log(response)

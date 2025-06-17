@@ -38,7 +38,7 @@ const Refund = () => {
 
   useEffect(() => {
     // Replace with your actual endpoint
-    axios.get(`http://localhost:4000/payment/refundRequests/restaurant/${authUser._id}`)
+    axios.get(`https://food-ordering-system-backend-xluu.onrender.com/payment/refundRequests/restaurant/${authUser._id}`)
       .then(res => {
         console.log("Refund", res.data);
         if (res.data.refunds) {
@@ -53,7 +53,7 @@ const Refund = () => {
   }, []);
 
   const handleApprove = (orderId, refundRequestId, amount) => {
-    axios.get(`http://localhost:4000/payment/approveRefundRequest/${authUser.contact}/${authUser.name}/${amount}/${orderId}/${refundRequestId}`)
+    axios.get(`https://food-ordering-system-backend-xluu.onrender.com/payment/approveRefundRequest/${authUser.contact}/${authUser.name}/${amount}/${orderId}/${refundRequestId}`)
       .then(res => {
         if (res.data.checkout_url) {
           setModalContent(
@@ -76,7 +76,7 @@ const Refund = () => {
   };
 
   const handleDecline = (refundId) => {
-    axios.get(`http://localhost:4000/payment/declineRefundRequest/${refundId}`)
+    axios.get(`https://food-ordering-system-backend-xluu.onrender.com/payment/declineRefundRequest/${refundId}`)
       .then(res => {
         setModalContent(res.data.message || "No response message");
         setRefunds(prev => prev.filter(r => r._id !== refundId));

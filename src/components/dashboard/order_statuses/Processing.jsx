@@ -13,7 +13,7 @@ const Processing = () => {
     const [ourDeliveryPersonList, setOurDeliveryPersonList] = useState([])
     const [theirOwnDeliveryPersonList, setTheirOwnDeliveryPersonList] = useState([])
     const [updateActiveDeliveryPeople, setUpdateActiveDeliveryPeople] = useState(false)
-    const [loadingActiveDeliveryPeople,setLoadingActiveDeliveryPeople]=useState(false)
+    const [loadingActiveDeliveryPeople, setLoadingActiveDeliveryPeople] = useState(false)
     const socket = useSocketContext()
 
 
@@ -109,7 +109,7 @@ const Processing = () => {
 
     useEffect(() => {
         async function get() {
-            const response = await axios.get(`http://localhost:4000/order/restaurant/${authUser._id}/status/Processing`, {
+            const response = await axios.get(`https://food-ordering-system-backend-xluu.onrender.com/order/restaurant/${authUser._id}/status/Processing`, {
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -135,7 +135,7 @@ const Processing = () => {
         async function get() {
             try {
                 setLoadingActiveDeliveryPeople(true);
-                const response = await axios.get(`http://localhost:4000/gps/get_nearby_locations/${authUser.location.coordinates[1]}/${authUser.location.coordinates[0]}`, { withCredentials: true });
+                const response = await axios.get(`https://food-ordering-system-backend-xluu.onrender.com/gps/get_nearby_locations/${authUser.location.coordinates[1]}/${authUser.location.coordinates[0]}`, { withCredentials: true });
                 let ours = [];
                 let theirs = [];
                 response.data.nearbyDeliveryPeople.forEach(deliveryPerson => {
@@ -166,7 +166,7 @@ const Processing = () => {
 
     // Remove order from list after status update
     const handleOrderUpdate = (orderId) => {
-        setOrders(prevOrders => prevOrders.filter( order => order._id !== orderId));
+        setOrders(prevOrders => prevOrders.filter(order => order._id !== orderId));
     };
 
     return (
@@ -178,7 +178,7 @@ const Processing = () => {
                     type="text"
                     placeholder="Search orders..."
                     className=" w-96 mt-2 mx-auto border-b border-gray-400  px-4 py-2 text-sm bg-white"
-                   value={searchQuery}
+                    value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                 />
             </div>
@@ -189,7 +189,7 @@ const Processing = () => {
                     <div className="text-center text-gray-400 py-8">No order is found.</div>
                 ) : (
                     paginatedOrders.map(order => (
-                        <DisplayOrders order={order} onOrderUpdate={handleOrderUpdate} />
+                        <DisplayOrders order={order} onOrderUpdate={handleOrderUpdate} ourDeliveryPersonList={ourDeliveryPersonList} theirOwnDeliveryPersonList={theirOwnDeliveryPersonList} updateActiveDeliveryPeople={updateActiveDeliveryPeople} setUpdateActiveDeliveryPeople={setUpdateActiveDeliveryPeople} loadingActiveDeliveryPeople={loadingActiveDeliveryPeople}/>
                     ))
                 )}
             </div>

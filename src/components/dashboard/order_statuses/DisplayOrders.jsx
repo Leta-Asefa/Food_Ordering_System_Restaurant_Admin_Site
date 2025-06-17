@@ -6,13 +6,13 @@ import { useAuthUserContext } from '../../../contexts/AuthUserContext';
 const DisplayOrders = ({ order, ourDeliveryPersonList, theirOwnDeliveryPersonList, updateActiveDeliveryPeople, setUpdateActiveDeliveryPeople, loadingActiveDeliveryPeople, onOrderUpdate }) => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [status, setStatus] = useState(order.status)
+    const [status, setStatus] = useState(order?.status)
     const { authUser } = useAuthUserContext()
 
 
 
     const handleImageClick = () => {
-     //   setUpdateActiveDeliveryPeople(!updateActiveDeliveryPeople)
+       setUpdateActiveDeliveryPeople(!updateActiveDeliveryPeople)
         setIsModalOpen(true);
     };
 
@@ -25,7 +25,7 @@ const DisplayOrders = ({ order, ourDeliveryPersonList, theirOwnDeliveryPersonLis
         console.log("Person", person)
 
         try {
-            const response = await axios.get(`http://localhost:4000/order/${order._id}/deliveryoffer/${person.userId}/${authUser._id}`, {
+            const response = await axios.get(`https://food-ordering-system-backend-xluu.onrender.com/order/${order?._id}/deliveryoffer/${person?.userId}/${authUser._id}`, {
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -35,7 +35,7 @@ const DisplayOrders = ({ order, ourDeliveryPersonList, theirOwnDeliveryPersonLis
             console.log("offer", response)
 
             if (response.data.message) {
-                alert(`Delivery offer is sent to ${person.username}. if he/she declines or not answer in 45 seconds , we will notify you to change another person !`)
+                alert(`Delivery offer is sent to ${person?.username}. if he/she declines or not answer in 45 seconds , we will notify you to change another person !`)
             }
 
         } catch (error) {
@@ -50,7 +50,7 @@ const DisplayOrders = ({ order, ourDeliveryPersonList, theirOwnDeliveryPersonLis
         setStatus(newStatus);
 
         try {
-            const response = await axios.put(`http://localhost:4000/order/${order._id}/status`, {
+            const response = await axios.put(`https://food-ordering-system-backend-xluu.onrender.com/order/${order?._id}/status`, {
                 status: newStatus
             }, {
                 headers: {
@@ -60,8 +60,9 @@ const DisplayOrders = ({ order, ourDeliveryPersonList, theirOwnDeliveryPersonLis
             });
             console.log(response)
             if (response.data.message) {
+                console.log("Status updated successfully", response.data.message);
                 setStatus(newStatus)
-                onOrderUpdate(order._id);//to remove the order from the list after status update
+                onOrderUpdate(order?._id);//to remove the order from the list after status update
             }
 
         } catch (error) {
@@ -73,27 +74,27 @@ const DisplayOrders = ({ order, ourDeliveryPersonList, theirOwnDeliveryPersonLis
     return (
         <div className='p-2 rounded-lg bg-gray-100'>
             <div className='flex justify-between font-mono font-extrabold w-full text-sm border-b-2 border-gray-300 mb-1'>
-                <div className=''>Order ID : {order._id}</div>
-                <div>Customer Name : {order.userId.username}</div>
-                <div>Customer Contact : {order.userId.phoneNumber}</div>
+                <div className=''>Order ID : {order?._id}</div>
+                <div>Customer Name : {order?.userId?.username}</div>
+                <div>Customer Contact : {order?.userId?.phoneNumber}</div>
             </div>
             <div className='flex flex-row justify-between'>
                 <div>
 
                     <div className='flex gap-x-3 gap-y-1 flex-grow flex-wrap p-1 pl-0'>
                         <div className='font-semibold'>Order Items : </div>
-                        {order.items.map((item) => {
-                            return <div className='p-0'> {item.item.name} ({item.quantity}X) </div>
+                        {order?.items.map((item) => {
+                            return <div className='p-0'> {item?.item?.name} ({item?.quantity}X) </div>
                         })}
                     </div>
 
                     <div className=''>
-                        <div className='font-semibold'>Total : <span className='font-normal'>{order.totalAmount} ETB</span> </div>
+                        <div className='font-semibold'>Total : <span className='font-normal'>{order?.totalAmount} ETB</span> </div>
                     </div>
 
                     <div className='flex flex-row gap-5'>
                         <div className='font-semibold'>Delivery Address</div>
-                        <div>{order.shippingAddress.address}</div>
+                        <div>{order?.shippingAddress.address}</div>
                     </div>
 
                 </div>
@@ -102,24 +103,25 @@ const DisplayOrders = ({ order, ourDeliveryPersonList, theirOwnDeliveryPersonLis
 
                     <div className='flex flex-row' >
                         <div>
-                            <div className='font-semibold'>{order.deliveryPersonId?.username || "Not Assigned !"}</div>
-                            <div className=''>{order.deliveryPersonId?.phoneNumber || 'Not Assigned !'}</div>
+                            <div className='font-semibold'>{order?.deliveryPersonId?.username || "Not Assigned !"}</div>
+                            <div className=''>{order?.deliveryPersonId?.phoneNumber || 'Not Assigned !'}</div>
                             <div
                                 onClick={handleImageClick}
-                                className={`bg-gray-800 text-white hover:bg-gray-600 rounded-lg px-1 ${order.status === 'Processing' ? 'visible' : 'hidden'}`}
+                                className={`bg-gray-800 text-white hover:bg-gray-600 rounded-lg px-1 ${order?.status === 'Processing' ? 'visible' : 'hidden'}`}
                             >
                                 Change Delivery Person</div>
                         </div>
 
-                        <img src={order.deliveryPersonId?.image || '/profile.svg'} className='w-10 h-10 mx-auto rounded-lg' />
+                        <img src={order?.deliveryPersonId?.image || '/profile.svg'} className='w-10 h-10 mx-auto rounded-lg' />
                     </div>
-                    <div className=''>Order Date : {order.createdAt}</div>
+                    <div className=''>Order Date : {order?.createdAt}</div>
                     {
-                        order.status === 'Processing' && (
+                        order?.status === 'Processing' && (
 
                             <div className=''>
                                 <label for="status">Status : </label>
                                 <select id="status" name="status" value={status} onChange={(e) => handleStatusChange(e)}>
+                                    <option value="Processing">Processing</option>
                                     <option value="OnTransit">On Transit</option>
                                     <option value="Cancelled">Cancelled</option>
                                 </select>
